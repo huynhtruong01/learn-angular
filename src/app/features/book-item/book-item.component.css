@@ -1,0 +1,41 @@
+.book {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    border-radius: 5px;
+    background-color: #eff5f5;
+}
+
+.book__img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.book__desc span {
+    font-weight: bold;
+}
+
+.book__desc {
+    text-overflow: ellipsis;
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.book__desc:hover {
+    text-decoration: underline;
+}
+
+.book__amount {
+    margin-bottom: 8px;
+}
+
+.btn-add-to-cart {
+    padding: 10px 20px;
+    background-color: #dc3535;
+    border-radius: 5px;
+    color: #fff;
+}

@@ -1,0 +1,11 @@
+<li class="book">
+    <div class="book__img">
+        <img [src]="book.imgUrl" [alt]="book.name" />
+    </div>
+    <h3 class="book__desc">
+        <span>{{ book.name | titlecase }}</span> by
+        <span>{{ book.author | titlecase }}</span>
+    </h3>
+    <p class="book__amount">{{ book.amount | currency }}</p>
+    <button (click)="addToCart()" class="btn-add-to-cart">Add to cart</button>
+</li>

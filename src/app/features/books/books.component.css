@@ -1,0 +1,19 @@
+.books__title {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 28px;
+}
+
+.book__list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 30px;
+}
+
+.book__item {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% / 3 - 20px);
+}

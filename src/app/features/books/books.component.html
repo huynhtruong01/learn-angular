@@ -1,0 +1,14 @@
+<section id="books">
+    <div class="container books__container">
+        <h2 class="books__title">Books</h2>
+
+        <ul class="book__list">
+            <app-book-item
+                (bookEmitter)="addToCart($event)"
+                [book]="book"
+                *ngFor="let book of bookList; let i = index"
+                class="book__item"
+            ></app-book-item>
+        </ul>
+    </div>
+</section>

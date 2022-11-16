@@ -1,1 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+*::after,
+*::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: cursive;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+button {
+    display: inline-block;
+    cursor: pointer;
+    font-family: cursive;
+    border: none;
+    outline: none;
+    background: none;
+}
+
+a {
+    display: block;
+    text-decoration: none;
+    color: #000;
+}
+
+.container {
+    width: 80%;
+    padding: 16px;
+    margin: auto;
+}
