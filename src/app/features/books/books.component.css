@@ -4,6 +4,13 @@
     font-size: 28px;
 }
 
+button {
+    color: #fff;
+    background-color: blueviolet;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
 .book__list {
     display: flex;
     justify-content: center;

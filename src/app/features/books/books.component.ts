@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'
+import { BooksService } from './books.service'
 
 export interface Book {
     name: string
@@ -12,144 +13,137 @@ export interface Book {
     templateUrl: './books.component.html',
     styleUrls: ['./books.component.css'],
 })
-export class BooksComponent implements OnInit {
+export class BooksComponent implements OnInit, OnDestroy {
+    bookList: Book[]
+
+    private bookService: BooksService
+    constructor() {
+        this.bookService = new BooksService()
+        this.bookList = this.bookService.getBooks()
+    }
+
     @Output() bookListEmitter = new EventEmitter<Book[]>()
-    bookList: Book[] = [
-        {
-            name: 'Clean Book',
-            author: 'Robert C Martin',
-            imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Cracking the Coding Interview',
-            author: 'Gayle Laakmann McDowell',
-            imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Cracking the Coding Interview',
-            author: 'Gayle Laakmann McDowell',
-            imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Cracking the Coding Interview',
-            author: 'Gayle Laakmann McDowell',
-            imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Clean Book',
-            author: 'Robert C Martin',
-            imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Cracking the Coding Interview',
-            author: 'Gayle Laakmann McDowell',
-            imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Clean Book',
-            author: 'Robert C Martin',
-            imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Cracking the Coding Interview',
-            author: 'Gayle Laakmann McDowell',
-            imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Clean Book',
-            author: 'Robert C Martin',
-            imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Cracking the Coding Interview',
-            author: 'Gayle Laakmann McDowell',
-            imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Clean Book',
-            author: 'Robert C Martin',
-            imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Cracking the Coding Interview',
-            author: 'Gayle Laakmann McDowell',
-            imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Clean Book',
-            author: 'Robert C Martin',
-            imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Cracking the Coding Interview',
-            author: 'Gayle Laakmann McDowell',
-            imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Clean Book',
-            author: 'Robert C Martin',
-            imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Cracking the Coding Interview',
-            author: 'Gayle Laakmann McDowell',
-            imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
-            amount: 400,
-        },
-        {
-            name: 'Clean Book',
-            author: 'Robert C Martin',
-            imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
-            amount: 400,
-        },
-    ]
+    // bookList: Book[] = [
+    //     {
+    //         name: 'Clean Book',
+    //         author: 'Robert C Martin',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Cracking the Coding Interview',
+    //         author: 'Gayle Laakmann McDowell',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Cracking the Coding Interview',
+    //         author: 'Gayle Laakmann McDowell',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Cracking the Coding Interview',
+    //         author: 'Gayle Laakmann McDowell',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Clean Book',
+    //         author: 'Robert C Martin',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Cracking the Coding Interview',
+    //         author: 'Gayle Laakmann McDowell',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Clean Book',
+    //         author: 'Robert C Martin',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Cracking the Coding Interview',
+    //         author: 'Gayle Laakmann McDowell',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Clean Book',
+    //         author: 'Robert C Martin',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Cracking the Coding Interview',
+    //         author: 'Gayle Laakmann McDowell',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Clean Book',
+    //         author: 'Robert C Martin',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Cracking the Coding Interview',
+    //         author: 'Gayle Laakmann McDowell',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Clean Book',
+    //         author: 'Robert C Martin',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Cracking the Coding Interview',
+    //         author: 'Gayle Laakmann McDowell',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Clean Book',
+    //         author: 'Robert C Martin',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Cracking the Coding Interview',
+    //         author: 'Gayle Laakmann McDowell',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg',
+    //         amount: 400,
+    //     },
+    //     {
+    //         name: 'Clean Book',
+    //         author: 'Robert C Martin',
+    //         imgUrl: 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg',
+    //         amount: 400,
+    //     },
+    // ]
 
-    name = 'Clean Book'
-    author = 'Robert C Martin'
-    imgUrl = 'https://m.media-amazon.com/images/I/41xShlnTZTL._AC_UY218_.jpg'
+    isToggle = false
+    textProperty: string = ''
 
-    name2 = 'Cracking the Coding Interview'
-    author2 = 'Gayle Laakmann McDowell'
-    imgUrl2 =
-        'https://m.media-amazon.com/images/I/41oYsXjLvZL._SX348_BO1,204,203,200_.jpg'
-
-    isDisabled = false
-
-    constructor() {}
-
-    ngOnInit(): void {}
-
-    stateBook = 'Show'
-    handleToggle(): void {
-        this.isDisabled = !this.isDisabled
-        if (this.stateBook === 'Show') {
-            this.stateBook = 'Hide'
-        } else {
-            this.stateBook = 'Show'
-        }
+    handleToggle() {
+        this.isToggle = !this.isToggle
     }
 
-    handleMouseOver(): void {
-        this.isDisabled = true
+    ngOnInit(): void {
+        // this.bookList = this.bookService.getBooks()
+        this.bookService.serviceProperty = 'Hello world'
+        this.textProperty = this.bookService.serviceProperty
     }
 
-    handleMouseOut(): void {
-        this.isDisabled = false
+    ngOnDestroy(): void {
+        this.bookList = []
+        console.log('Books empty')
     }
 
     bookInCartList: Book[] = []
