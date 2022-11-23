@@ -1,23 +1,26 @@
 # CONCEPT ANGULAR
 
-[Create new project](#create-new-project)
-[Create new component](#create-new-component)
-[Interpolation (Nội suy)](#interpolation-nội-suy)
-[Property Binding](#property-binding)
-[Event Binding](#event-binding)
-[Two-way binding](#two-way-binding)
-[Directives](#directives)
-[Pipes](#pipes)
-[Sharing data parent to child and otherwise](#sharing-data-parent-to-child-and-otherwise)
-[Lifecycle Hooks](#lifecycle-hooks)
-[Services](#services)
-[Dependency Injection (DI)](#dependency-injection-di)
-[Routing](#routing)
+- [CONCEPT ANGULAR](#concept-angular)
+  - [Create new project](#create-new-project)
+  - [App Module](#app-module)
+  - [Create new component](#create-new-component)
+  - [Interpolation (Nội suy)](#interpolation-nội-suy)
+  - [Property Binding](#property-binding)
+  - [Event Binding](#event-binding)
+  - [Two-way binding](#two-way-binding)
+  - [Directives](#directives)
+  - [Pipes](#pipes)
+  - [Sharing data parent to child and otherwise](#sharing-data-parent-to-child-and-otherwise)
+  - [Lifecycle Hooks](#lifecycle-hooks)
+  - [Services](#services)
+  - [Dependency Injection (DI)](#dependency-injection-di)
+  - [Routing](#routing)
 
 ---
 
 ## Create new project
 
+-   **Angular** is JS Framework
 -   To install new project about **Angular**, laptop need to `2` things:
 
     -   **Node.js** environment
@@ -26,22 +29,59 @@
 -   The steps create new project:
 
     -   **S1**: `ng new my-app`
-    -   **S2**: `cd my-app` and `npm start` with `http://localhost:4200`
+    -   **S2**: `cd my-app` => `npm start` => run web with `http://localhost:4200`
 
-- How to switch install between `npm` and `yarn`: `ng config -g cli.packageManager yarn`
+-   How to switch install between `npm` and `yarn`: `ng config -g cli.packageManager yarn`
+
+## App Module
+
+```ts
+import { NgModule } from '@angular/core'
+import { FormsModule } from '@angular/forms'
+import { BrowserModule } from '@angular/platform-browser'
+import { AppRoutingModule } from './app-routing.module'
+import { AppComponent } from './app.component'
+import { BookItemComponent } from './features/book-item/book-item.component'
+import { BooksComponent } from './features/books/books.component'
+import { HeaderComponent } from './features/header/header.component'
+import { MainComponent } from './features/main/main.component'
+import { TestComponent } from './test/test.component'
+import { HomeComponent } from './features/home/home.component'
+import { AboutComponent } from './features/about/about.component'
+import { ContactComponent } from './features/contact/contact.component'
+
+@NgModule({
+    declarations: [
+        // declaration all component in my app
+        AppComponent,
+        BooksComponent,
+        BookItemComponent,
+        HeaderComponent,
+        MainComponent,
+        TestComponent,
+        HomeComponent,
+        AboutComponent,
+        ContactComponent,
+    ],
+    imports: [BrowserModule, FormsModule, AppRoutingModule], // it allow you add some other modules
+    providers: [],
+    bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
 
 ## Create new component
 
 -   A **component** contains `4`:
 
-    -   **component file**: `<component-name>.component.ts`
-    -   **template(html) file**: `<component-name>.component.html`
-    -   **css file**: `<component-name>.component.css`
-    -   **testing specification file**: `<component-name>.component.spec.ts`
+    -   `component file`: `<component-name>.component.ts`
+    -   `template(html) file**`: `<component-name>.component.html`
+    -   `css file`: `<component-name>.component.css`
+    -   `testing specification file`: `<component-name>.component.spec.ts`
 
 -   only `app file` have **module file**: `<component-name>.module.ts`
 
--   We can use `command` to generate a **component**: `ng generate component name-file`
+-   We can use `command` to generate a **component**: `ng generate component name-file` or `ng g c name-file`
 -   We can use generate to see command `generate` : `ng generate --help`
 
 1. ### Component file
@@ -49,9 +89,9 @@
 -   `Interface` must be on top **component**, only after `all import`
 
 ```ts
-import {Component} from '@angular/core'
+import { Component } from '@angular/core'
 
-export interface Book{
+export interface Book {
     name: string
     author: string
 }
