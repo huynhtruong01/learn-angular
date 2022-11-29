@@ -3,6 +3,7 @@
 - [CONCEPT ANGULAR](#concept-angular)
   - [Create new project](#create-new-project)
   - [App Module](#app-module)
+  - [Data Binding (Ràng buộc dữ liệu)](#data-binding-ràng-buộc-dữ-liệu)
   - [Create new component](#create-new-component)
   - [String Interpolation (Nội suy chuoi)](#string-interpolation-nội-suy-chuoi)
   - [Property Binding](#property-binding)
@@ -78,6 +79,19 @@ export class AppModule {}
 ```
 
 ---
+
+## Data Binding (Ràng buộc dữ liệu)
+
+-   **Data binding** == **Communication**
+-   **Data binding** is `communication` between `Typescript code` and `Template HTML`; when data in `Typescript code` change, `Template HTML` (UI) also change by data in `Typescript code`.
+
+-   **Data binding** contains:
+    -   String Interpolation
+    -   Property Binding
+    -   Event Binding
+    -   Two-way Binding
+
+![Data binding](./assets/images/data-binding.png)
 
 ## Create new component
 

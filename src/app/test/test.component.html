@@ -1,7 +1,0 @@
-<div class="container">
-    <button [disabled]="isDisabled" (click)="handleClick()">
-        <ng-container *ngIf="isDisabled"> Disable </ng-container>
-        <ng-container *ngIf="!isDisabled"> Not disable </ng-container>
-    </button>
-    <button (click)="handleToggleDisable()">toggle</button>
-</div>
