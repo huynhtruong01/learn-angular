@@ -4,11 +4,16 @@
   - [Create new project](#create-new-project)
   - [App Module](#app-module)
   - [Create new component](#create-new-component)
-  - [Interpolation (Nội suy)](#interpolation-nội-suy)
+  - [String Interpolation (Nội suy chuoi)](#string-interpolation-nội-suy-chuoi)
   - [Property Binding](#property-binding)
   - [Event Binding](#event-binding)
   - [Two-way binding](#two-way-binding)
   - [Directives](#directives)
+  - [Content Projection (ng-content)](#content-projection-ng-content)
+    - [How to use it](#how-to-use-it)
+  - [ng-template, ngTemplateOutlet and ng-container](#ng-template-ngtemplateoutlet-and-ng-container)
+    - [When use ng-template](#when-use-ng-template)
+    - [ngTemplateOutlet](#ngtemplateoutlet)
   - [Pipes](#pipes)
   - [Sharing data parent to child and otherwise](#sharing-data-parent-to-child-and-otherwise)
   - [Lifecycle Hooks](#lifecycle-hooks)
@@ -32,6 +37,8 @@
     -   **S2**: `cd my-app` => `npm start` => run web with `http://localhost:4200`
 
 -   How to switch install between `npm` and `yarn`: `ng config -g cli.packageManager yarn`
+
+---
 
 ## App Module
 
@@ -69,6 +76,8 @@ import { ContactComponent } from './features/contact/contact.component'
 })
 export class AppModule {}
 ```
+
+---
 
 ## Create new component
 
@@ -188,7 +197,9 @@ import { NgModule, BrowserModule } from '@angular/core'
 export class AppModule {}
 ```
 
-## Interpolation (Nội suy)
+---
+
+## String Interpolation (Nội suy chuoi)
 
 -   **Interpolation** refers to embedding expressions into marked up next.
 -   Use `{{}}` (curly brace) in `component`, Angular find this variable in `component`
@@ -196,7 +207,7 @@ export class AppModule {}
 -   app.component.html
 
 ```html
-<p>{{ title }}</p>
+<p>I say {{ title }}, you too {{ sayHi() }}</p>
 ```
 
 -   app.component.ts
@@ -215,8 +226,14 @@ import {Component} from '@angular/core'
 
 export class AppComponent{
     title: string = 'Hello world'
+
+    sayHi(): void{
+        return this.title
+    }
 }
 ```
+
+---
 
 ## Property Binding
 
@@ -250,6 +267,8 @@ export class Component {
 
 > **Tức là**, nó sẽ giúp cho chúng ta thiết lập các `property` cho element trong view. Update 1 giá trị của 1 `property` trong view và ràng buộc nó đến 1 element. Khi value thay đổi thì `property` cũng sẽ thay đổi dựa vào value đó và nó hiểu đó là giá trị gì (boolean, string, number,...)
 
+---
+
 ## Event Binding
 
 -   **Event Binding** lets you listen and respond user actions event `such us` click, key event, mouse event, change, input,...
@@ -278,6 +297,8 @@ export class Component {
 ```
 
 > **Tức là**, nó cho phép chúng ta tạo event như click, mouse event, key event, change, input,....
+
+---
 
 ## Two-way binding
 
@@ -361,6 +382,231 @@ Welcome <ng-container *ngIf="title">to <i>the</i> {{title}} world.</ng-container
 </div>
 ```
 
+---
+
+## Content Projection (ng-content)
+
+When the component the same but difference about content in this component (`Như ta dùng children trong React để chèn nội dung riêng biệt giữa các component giống nhau`)
+
+### How to use it
+
+Style code selectors:
+
+-   Tag selector: <ng-content select="some-component-selector-or-html-tag"></ng-content>
+-   CSS Class selector: <ng-content select=".some-class"></ng-content>
+-   Attribute selector: <ng-content select="[some-attr]"></ng-content>
+-   Combine multiple selectors: <ng-content select="some-component-selector-or-html-tag[some-attr]"></ng-content>
+
+**product-list.html**
+
+```html
+<div class="product-list">
+    <div *ngFor="let product of productList">
+        <app-product-item [product]="product">
+            <h3 class="product__title">{{ product.title }}</h3>
+            <button class="btn-product-click">{{ product.contentBtn }}</button>
+        </app-product-item>
+    </div>
+</div>
+```
+
+**product-list.component.ts**
+
+```ts
+import { Component, OnInit } from '@angular/core'
+
+export interface Product {
+    title: string
+    description: string
+    contentBtn: string
+}
+
+@Component({
+    selector: 'app-product-list',
+    templateUrl: './product-list.component.html',
+    styleUrls: ['./product-list.component.scss'],
+})
+export class ProductListComponent implements OnInit {
+    constructor() {}
+
+    ngOnInit(): void {}
+
+    productList: Product[] = [
+        {
+            title: 'Title 1',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 1',
+        },
+        {
+            title: 'Title 2',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 2',
+        },
+        {
+            title: 'Title 3',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 3',
+        },
+        {
+            title: 'Title 4',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 4',
+        },
+        {
+            title: 'Title 5',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 5',
+        },
+    ]
+}
+```
+
+**product-item.html**
+
+```html
+<div class="product">
+    <ng-content select=".product__title"></ng-content>
+    <p class="product__desc">{{ product.description }}</p>
+    <ng-content select=".btn-product-click"></ng-content>
+</div>
+```
+
+**product-item.component.ts**
+
+```ts
+import { Component, Input, OnInit } from '@angular/core'
+import { Product } from '../product-list/product-list.component'
+
+@Component({
+    selector: 'app-product-item',
+    templateUrl: './product-item.component.html',
+    styleUrls: ['./product-item.component.scss'],
+})
+export class ProductItemComponent implements OnInit {
+    @Input() product: Product
+
+    constructor() {}
+
+    ngOnInit(): void {}
+}
+```
+
+---
+
+## ng-template, ngTemplateOutlet and ng-container
+
+It is a `object` can use `directives` such us: `ngIf`, `ngFor`, `[ngSwitch]` and custom directive,...
+
+When you use `*ngIf` with conditional else, we can bind `template reference` by syntax ex: `#noPG13` to render UI
+
+```html
+<div *ngIf="user.age >= 13; else noPG13">We can see content</div>
+<ng-template #noPG13>
+    <div>You can not see content</div>
+</ng-template>
+```
+
+### When use ng-template
+
+**1. Use with Structure Directive in Angular, ex \*ngIf**
+**2. When use UI element in a component being loop its this component, but component too small to detached to own component**
+
+When we aren't use **ng-template**
+
+```html
+<div class="card">
+    <div class="card-header">
+        You have selected
+        <span class="badge badge-primary">{{ counter }}</span> items.
+    </div>
+    <div class="card-body">
+        There are <span class="badge badge-primary">{{ counter }}</span> items was
+        selected.
+    </div>
+    <div class="card-footer">
+        You have selected
+        <span class="badge badge-primary">{{ counter }}</span> items.
+    </div>
+</div>
+```
+
+When we use **ng-template**, **ngTemplateLayout**
+
+```html
+<div class="card">
+    <div class="card-header">
+        You have selected
+        <ng-container [ngTemplateOutlet]="counterTmpl"></ng-container>.
+    </div>
+    <div class="card-body">
+        There are <ng-container [ngTemplateOutlet]="counterTmpl"></ng-container> was
+        selected.
+    </div>
+    <div class="card-footer">
+        You have selected
+        <ng-container [ngTemplateOutlet]="counterTmpl"></ng-container>.
+    </div>
+</div>
+
+<ng-template #counterTmpl>
+    <span class="badge badge-primary">{{ counter }}</span> items
+</ng-template>
+```
+
+> When code use `ng-template`:
+>
+> -   If only edit UI to `counter`. Instead of edit `3` UI, now we only edit on this position is `ng-template` of counter.
+
+**3. Use ng-template to pass other component. Support override template available in component**
+
+### ngTemplateOutlet
+
+-   **ngTemplateOutlet** use to render a template builded by `ng-template` to UI.
+
+    -   \*ngTemplateOutlet='templateRef'
+    -   [ngTemplateOutlet]='templateRef'
+
+Ex: we can reuse button with content and icon for button difference.
+
+**button.component.html**
+
+```html
+<button class="btn btn-primary">Click here</button>
+
+<button class="btn btn-danger">
+    <i class="fa fa-remove"></i>
+    Delete
+</button>
+```
+
+**app.component.html**
+
+```html
+<ng-template #buttonTmpl let-label="label" let-className="className" let-icon="icon">
+    <button [ngClass]="['btn', className ? className : '']">
+        <i *ngIf="icon" class="fa {{icon}}"></i>
+        {{ label }}
+    </button>
+</ng-template>
+
+<ng-container
+    [ngTemplateOutlet]="buttonTmpl"
+    [ngTemplateOutletContext]="{ label: 'Click here', className: 'btn-primary', icon: null }"
+>
+</ng-container>
+
+<ng-container
+    [ngTemplateOutlet]="buttonTmpl"
+    [ngTemplateOutletContext]="{ label: 'Remove', className: 'btn-danger', icon: 'fa-remove' }"
+>
+</ng-container>
+```
+
 ## Pipes
 
 -   **Pipes** use mutate output value, show to template HTML such us lowercase, titlecase, datetime, currency,...
@@ -400,15 +646,7 @@ export class HeroBirthdayComponent {
 #src / app / exponential - strength.pipe.ts
 
 import { Pipe, PipeTransform } from '@angular/core'
-/*
- * Raise the value exponentially
- * Takes an exponent argument that defaults to 1.
- * Usage:
- *   value | exponentialStrength:exponent
- * Example:
- *   {{ 2 | exponentialStrength:10 }}
- *   formats to: 1024
- */
+
 @Pipe({ name: 'exponentialStrength' })
 export class ExponentialStrengthPipe implements PipeTransform {
     transform(value: number, exponent?: number): number {
@@ -433,6 +671,8 @@ import { Component } from '@angular/core'
 })
 export class PowerBoosterComponent {}
 ```
+
+---
 
 ## Sharing data parent to child and otherwise
 
@@ -513,6 +753,8 @@ export class BookComponent {
 }
 ```
 
+---
+
 ## Lifecycle Hooks
 
 ```ts
@@ -556,9 +798,15 @@ export class Foo implements OnInit, OnDestroy {
 }
 ```
 
+---
+
 ## Services
 
+---
+
 ## Dependency Injection (DI)
+
+---
 
 ## Routing
 
