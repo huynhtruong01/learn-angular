@@ -1,0 +1,6 @@
+<div class="account-list">
+    <h4 class="text-center mb-4">Account List</h4>
+    <ng-container *ngFor="let account of accountList">
+        <app-account-item [account]="account"></app-account-item>
+    </ng-container>
+</div>

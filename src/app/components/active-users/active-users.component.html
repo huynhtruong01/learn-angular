@@ -1,0 +1,12 @@
+<div class="mb-3">
+    <h3>Active user</h3>
+    <div class="active-user-list border-rounded">
+        <ng-container *ngFor="let activeUser of activeUserList">
+            <div class="active-user-item">
+                <span class="border-end px-2">{{activeUser.name}}</span>
+                <button class="btn text-primary btn-set" (click)="handleSetInactiveClick(activeUser.id)">Set
+                    Inactive</button>
+            </div>
+        </ng-container>
+    </div>
+</div>

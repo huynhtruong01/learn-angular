@@ -1,0 +1,16 @@
+<div class="d-flex">
+    <ul class="list-group me-5">
+        <li class="list-group-item" role="button">
+            <a href="" [routerLink]="['/servers', 'product']">Product</a>
+        </li>
+        <li class="list-group-item" role="button">
+            <a href="" [routerLink]="['/servers', 'test']">Test</a>
+        </li>
+        <li class="list-group-item" role="button">
+            <a href="" [routerLink]="['/servers', 'dev']">Dev</a>
+        </li>
+    </ul>
+    <div>
+        <router-outlet></router-outlet>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="account border rounded my-4 p-3">
+    <h5>
+        <a href="" [routerLink]="['/accounts', account.id]" fragment="loading...">{{account.name}}</a>
+    </h5>
+    <p>This account is {{account.status}}</p>
+    <hr>
+    <div class="btns d-flex justify-content-between">
+        <div class="btns-status">
+            <button class="btn btn-secondary me-2" (click)="handleUpdateStatus(account.id, 'active')">Active</button>
+            <button class="btn btn-secondary me-2"
+                (click)="handleUpdateStatus(account.id, 'inactive')">Inactive</button>
+            <button class="btn btn-secondary" (click)="handleUpdateStatus(account.id, 'hidden')">Hidden</button>
+        </div>
+        <button class="btn btn-danger" (click)="handleDeleteAccount(account.id)">Delete</button>
+    </div>
+</div>

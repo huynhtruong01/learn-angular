@@ -680,7 +680,7 @@ import { Component } from '@angular/core'
     selector: 'app-power-booster',
     template: `
         <h2>Power Booster</h2>
-        <p>Super power boost: {{ 2 | exponentialStrength: 10 }}</p>
+        <p>Super power boost: {{ 2 | exponentialStrength : 10 }}</p>
     `,
 })
 export class PowerBoosterComponent {}
@@ -816,6 +816,59 @@ export class Foo implements OnInit, OnDestroy {
 
 ## Services
 
+-   Create file services: `ng g s file-name` or `ng generate service file-name`
+
+1. ### Services
+
+-   **Services**: is the functions code that you can reuse for many difference component. You can use it for purpose:
+
+    -   The independence mission of component such us log, call api,...
+    -   Shared code logic for many difference components to use together.
+    -   Help your code cleaner and don't repeat your code logic in the many place difference component.
+
+2. ### Why would you Need Services:
+
+3. ### How to Create Services:
+
+**common.service.ts**
+
+```ts
+import { Injectable } from '@angular/core'
+
+@Injectable({
+    providedIn: 'root',
+})
+export class CommonService {
+    constructor() {}
+}
+```
+
+**app.component.ts**
+
+```ts
+// you can import services in a another component
+import { Component } from '@angular/core'
+import { CommonService } from './services/common.service'
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['app.component.css'],
+    providers: [CommonService], // this is important, if not have, it isn't working
+})
+export class AppComponent {
+    constructor(private commonService: CommonService) {}
+
+    handleClick(): void {
+        this.commonService.sayHi('Hello world')
+    }
+}
+```
+
+**Providers** help you how create service.
+
+4. ### Hierarchical Injector
+
 ---
 
 ## Dependency Injection (DI)
@@ -823,6 +876,8 @@ export class Foo implements OnInit, OnDestroy {
 ---
 
 ## Routing
+
+1. ### Install routing
 
 -   **Install package**: `npm install @angular/router`
 -   **Generate file router**: `app-routing.module.ts`
@@ -880,11 +935,245 @@ export class AppRoutingModule {}
         <li>
             <a
                 routerLink="/second-component"
-                routerLinkActive="active"
+                routerLinkActive="active" // class .active you style it
                 ariaCurrentWhenActive="page"
                 >Second Component</a
             >
         </li>
     </ul>
 </nav>
+```
+
+2. ### Pass Parameters
+
+```ts
+const routes: Routes = [
+    {
+        path: '',
+        component: HomeComponent,
+    },
+    {
+        path: 'recipes',
+        component: RecipesComponent,
+    },
+    {
+        path: 'shoppings',
+        component: ShoppingListComponent,
+    },
+    {
+        path: 'shoppings/:id', // pass parameter :id
+        component: ShoppingItemComponent,
+    },
+    {
+        path: 'accounts',
+        component: AccountListComponent,
+    },
+]
+
+@NgModule({
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+3. ### Fetching router parameter (Get data from URL by snapshot)
+
+-   You can inject `ActivatedRoute` to component to use.
+-   Should use `snapshot` for first initialization component.
+
+```ts
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
+
+@Component({
+    selector: 'app-shopping-item',
+    templateUrl: './shopping-item.component.html',
+    styleUrls: ['./shopping-item.component.css'],
+})
+export class ShoppingItemComponent implements OnInit {
+    id: number
+    constructor(private route: ActivatedRoute) {}
+
+    ngOnInit(): void {
+        console.log(this.route) // this is a object
+
+        // get parameter id from URL
+        this.id = Number.parseInt(this.route.snapshot.params['id'])
+    }
+}
+```
+
+> **But** when we change `param` by another `:id`, Angular isn't auto change data when `param` change. Because we have already this component, Angular don't know, don't recreate and destroy the old component although `param` of this component change
+> You can use `params` of `ActivatedRoute` to update data when `param` of this component change
+
+> **Important Route Observables**
+> You can use `onDestroy` to `unsubscribe()` for update data by `param`
+
+```ts
+export class ShoppingItemComponent implements OnInit, OnDestroy {
+    id: number
+    paramSubscription: Subscription
+
+    constructor(private route: ActivatedRoute) {}
+
+    ngOnInit(): void {
+        this.id = Number.parseInt(this.route.snapshot.params['id'])
+        this.paramSubscription = this.route.params.subscribe((param: Params) => {
+            this.id = Number.parseInt(param['id'])
+        })
+    }
+
+    ngOnDestroy(): void {
+        this.paramSubscription.unsubscribe()
+    }
+}
+```
+
+4. ### Passing queryParams & Fragments
+
+-   **HTML File**: use `queryParams` to pass param, `fragment`
+
+```html
+<a
+    class="text-white"
+    href=""
+    [routerLink]="['/shoppings', 2, 'edit']"
+    [queryParams]="{page: '1'}"
+    fragment="loading"
+    >Query Params</a
+>
+```
+
+-   **Navigate**:
+
+```ts
+handleNav2Click(): void {
+    this.router.navigate(['/shoppings', 2, 'edit'], {
+        relativeTo: this.route,
+        queryParams: { page: '1', limit: '10' },
+        fragment: 'loading',
+    })
+}
+```
+
+-   Retrieving **Query params** and **Fragment** (`Truy xuất query params and fragment`)
+
+```ts
+// get this.route from ActivatedRoute
+this.route.snapshot.queryParams
+this.route.snapshot.fragment
+```
+
+5. ### Nested Routes
+
+-   You can use `nested routes` like this:
+
+```ts
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
+import { AccountDetailComponent } from './components/account-detail/account-detail.component'
+import { AccountListComponent } from './components/account-list/account-list.component'
+import { NotFoundComponent } from './components/not-found/not-found.component'
+import { RecipesComponent } from './components/recipes/recipes.component'
+import { ServerItemComponent } from './components/servers/server-item/server-item.component'
+import { ServersComponent } from './components/servers/servers.component'
+import { ShoppingItemComponent } from './components/shopping-list/shopping-item/shopping-item.component'
+import { ShoppingListComponent } from './components/shopping-list/shopping-list.component'
+import { HomeComponent } from './features/home/home.component'
+
+const routes: Routes = [
+    {
+        path: '',
+        component: HomeComponent,
+    },
+    {
+        path: 'recipes',
+        component: RecipesComponent,
+    },
+    {
+        path: 'shoppings',
+        children: [
+            {
+                path: '',
+                component: ShoppingListComponent,
+            },
+            {
+                path: ':id',
+                component: ShoppingItemComponent,
+            },
+            {
+                path: ':id/edit',
+                component: ShoppingItemComponent,
+            },
+        ],
+    },
+    {
+        path: 'accounts',
+        children: [
+            {
+                path: '',
+                component: AccountListComponent,
+            },
+            {
+                path: ':id',
+                component: AccountDetailComponent,
+            },
+        ],
+    },
+    {
+        path: 'servers',
+        component: ServersComponent,
+        children: [
+            {
+                path: ':name',
+                component: ServerItemComponent,
+            },
+        ],
+    },
+    { path: '**', component: NotFoundComponent },
+]
+
+@NgModule({
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+-   It has `2` distinctive when use nested by `children`:
+    -   Use `component` for parent route
+    -   Not use `component` for parent route
+
+**Use component for parent route**: Use when pages the same route live in this component parent (`Dùng khi ta muốn tất cả page redirect trong component cha`)
+
+```ts
+{
+    path: 'servers',
+    component: ServersComponent,
+    children: [
+        {
+            path: ':name',
+            component: ServerItemComponent,
+        },
+    ],
+},
+```
+
+**Not use component for parent route**: Use when the same route, we can redirect a lot route. (`Dùng khi cùng 1 route ta có nhiều page khác nhau`)
+
+```ts
+{
+    path: 'accounts',
+    children: [
+        {
+            path: '',
+            component: AccountListComponent,
+        },
+        {
+            path: ':id',
+            component: AccountDetailComponent,
+        },
+    ],
+},
 ```

@@ -1,0 +1,9 @@
+<h3>Inactive user</h3>
+<div class="inactive-user-list border-rounded">
+    <ng-container *ngFor="let inactiveUser of inactiveUserList">
+        <div class="inactive-user-item">
+            <span class="border-end px-2">{{inactiveUser.name}}</span>
+            <button class="btn text-primary btn-set" (click)="handleSetActiveClick(inactiveUser.id)">Set Active</button>
+        </div>
+    </ng-container>
+</div>

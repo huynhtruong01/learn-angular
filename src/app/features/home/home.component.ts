@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core'
-import { Account, User } from './models'
-import { AccountService } from './services/account.service'
-import { UserService } from './services/user.service'
+import { Account, User } from 'src/app/models'
+import { AccountService } from 'src/app/services/account.service'
+import { UserService } from 'src/app/services/user.service'
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['app.component.css'],
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css'],
 })
-export class AppComponent implements OnInit {
+export class HomeComponent implements OnInit {
     accountList: Account[] = []
     userList: User[]
     activeUserList: User[]

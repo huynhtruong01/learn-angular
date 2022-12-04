@@ -1,0 +1,20 @@
+<form id="form" (submit)="handleSubmit($event)">
+    <div class="mb-3">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter name..." [(ngModel)]="nameVal"
+            [ngModelOptions]=" 
+        {standalone: true}">
+        <small class="form-text text-muted"></small>
+    </div>
+    <div class="mb-3">
+        <label for="status">Status</label>
+        <select class="form-select" id="status" [(ngModel)]="statusVal" [ngModelOptions]=" 
+        {standalone: true}">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="hidden">Hidden</option>
+        </select>
+        <small class="form-text text-muted"></small>
+    </div>
+    <button type="submit" class="btn btn-danger">Add</button>
+</form>
