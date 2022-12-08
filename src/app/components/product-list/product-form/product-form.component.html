@@ -1,0 +1,34 @@
+<form class="form__product" [formGroup]="valsForm" (ngSubmit)="handleSubmit($event)">
+    <div class="product__input">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Enter name" formControlName="name">
+        <small *ngIf="name?.hasError('required') && name?.touched">Please enter name product</small>
+    </div>
+    <div class="product__input">
+        <label for="description">Description</label>
+        <input type="text" id="description" placeholder="Enter description" formControlName="description">
+        <small *ngIf="description?.hasError('required') && description?.touched">Please enter description
+            product</small>
+    </div>
+    <div class="product__input">
+        <label for="img">Image</label>
+        <input type="text" id="img" placeholder="Enter image" formControlName="img">
+        <small *ngIf="img?.hasError('required') && img?.touched">Please enter image product</small>
+    </div>
+    <div class="product__input">
+        <label for="price">Price</label>
+        <input type="number" id="price" formControlName="price">
+        <small *ngIf="price?.hasError('required') && price?.touched">Please enter price product</small>
+        <small *ngIf="price?.hasError('min') && price?.touched">Please enter price product greater than $50</small>
+    </div>
+    <button type="submit" class="btn-product-add" [disabled]="valsForm.invalid">
+        <ng-container *ngIf="!id">
+            <i class="fa-solid fa-plus"></i>
+            Add product
+        </ng-container>
+        <ng-container *ngIf="id">
+            <i class="fa-solid fa-pen"></i>
+            Edit product
+        </ng-container>
+    </button>
+</form>

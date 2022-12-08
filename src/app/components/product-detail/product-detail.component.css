@@ -1,0 +1,19 @@
+.product-detail__img {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.product-detail__content {
+    padding: 16px;
+}
+
+.product-detail__desc {
+    font-size: 14px;
+    color: #000000cc;
+}
+
+.product-detail__price {
+    font-weight: bold;
+}

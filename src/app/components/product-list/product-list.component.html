@@ -1,0 +1,13 @@
+<div class="product__wrapper">
+    <button class="btn-add"><a [routerLink]="['add']"><i class="fa-solid fa-plus"></i> Add product</a></button>
+    <div class="product__container">
+        <div class="product-list">
+            <ng-container *ngFor="let product of productList">
+                <app-product-item [product]="product"></app-product-item>
+            </ng-container>
+        </div>
+        <div class="product__detail">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

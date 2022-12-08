@@ -21,6 +21,8 @@
   - [Services](#services)
   - [Dependency Injection (DI)](#dependency-injection-di)
   - [Routing](#routing)
+  - [Pipes](#pipes-1)
+  - [Observables](#observables)
 
 ---
 
@@ -1177,3 +1179,199 @@ export class AppRoutingModule {}
     ],
 },
 ```
+
+---
+
+## Pipes
+
+**Roadmap**
+
+-   Concept `pipes`
+-   How to use `pipes`
+-   How custom `pipes`
+
+---
+
+1. ### Concept Pipes
+
+-   **Pipes** is transform old data to new data
+
+2. ### Use Pipes
+
+![Pipes available](./assets/images/pipes-template.png)
+
+```html
+<p>{{time | date}}</p>
+```
+
+1. ### Custom Pipes
+
+-   Install pipes: `ng g p name-pipe`
+
+-   Code it
+
+```ts
+import { Pipe, PipeTransform } from '@angular/core'
+
+@Pipe({
+    name: 'formatDate',
+})
+export class FormatDatePipe implements PipeTransform {
+    transform(time: Date): string {
+        const date = `0${new Date(time).getDate()}`.slice(-2)
+        const month = `0${new Date(time).getMonth()}`.slice(-2)
+        const year = new Date(time).getFullYear()
+
+        return `${date}/${month}/${year}`
+    }
+}
+```
+
+-   Use it normal
+
+```html
+<p>{{ time | formatDate }}</p>
+```
+
+---
+
+## Observables
+
+**Roadmap**:
+
+-   Concept of `Observables` and `Observer`.
+-   How code `Observables` with `subscribe` and `unsubscribe`.
+-   How custom `Observables`: next, error, complete.
+-   How use `pipe` with `operator rxjs` to transform data.
+-   `Subjects`.
+
+---
+
+1. ### Concept Observables & Observer
+
+-   **Observables** is as `Promise`, it handle a lot of value async, it is `streams`, to transform to data you want. It is a `Function (Class)`. (`Tức là, nó giống như Promise, nhưng nó sẽ ko thực thi ngay lập tức như Promise, mà phải subscribe mới thực thi đc, nó có thể thực thi được nhiều dữ liệu và biến đổi dữ liệu, có thể hủy bỏ Observable, nó nhiều operators đc dùng còn Promise thì ko`)
+
+-   **Observer** is rally a lot of callback to listen event values (`next, error, complete`) to send by `Observable`. (`Tức là, nó là tập hợp các callbacks cho việc lắng nghe giá trị như next, error, complete,...`)
+
+-   **Subscription** is result after implementation a `Observable`, use to destroy handle of Observable.
+
+2. ### How to code Observables with subscribe & unsubscribe
+
+```ts
+import {interval, Subscription} from 'rxjs'
+
+export class HomeComponent implements OnInit, OnDestroy{
+    firstObservable: Subscription
+    constructor(){}
+
+    onInit():void {}
+
+    this.firstObservable = interval(1000).subscribe((count) => {
+        console.log(count)
+    })
+
+    onDestroy(): void {
+        this.firstObservable.unsubscribe()
+    }
+}
+```
+
+3. ### Custom a Observable with: next, error, complete
+
+```ts
+import { Observable, Subscription } from 'rxjs'
+
+export class HomeComponent implements OnInit {
+    firstObservable: Subscription
+    constructor() {}
+
+    ngOnInit(): void {
+        const customObservable = new Observable((observer) => {
+            let count = 0
+            setInterval(() => {
+                if (count > 5) {
+                    observer.error(new Error('Count is greater than 5'))
+                }
+                if (count === 5) {
+                    observer.complete()
+                }
+                observer.next(count)
+                count++
+            }, 1000)
+        })
+
+        this.firstObservable = customObservable.subscribe({
+            next: (count) => {
+                console.log(count)
+            },
+            error: (err) => {
+                console.log(err)
+            },
+            complete: (count) => {
+                console.log('Count equal 5 successfully')
+            },
+        })
+    }
+
+    ngOnDestroy(): void {
+        this.firstObservable.unsubscribe()
+    }
+}
+```
+
+4. ### Pipes with operators `rxjs`
+
+-   **Pipes** to transform data you want.
+
+```ts
+import { Observable, Subscription } from 'rxjs'
+import { map } from 'rxjs/operators'
+
+export class HomeComponent implements OnInit {
+    firstObservable: Subscription
+    constructor() {}
+
+    ngOnInit(): void {
+        const customObservable = new Observable((observer) => {
+            let count = 0
+            setInterval(() => {
+                if (count > 5) {
+                    observer.error(new Error('Count is greater than 5'))
+                }
+                if (count === 5) {
+                    observer.complete()
+                }
+                observer.next(count)
+                count++
+            }, 1000)
+        })
+
+        this.firstObservable = customObservable
+            .pipe(
+                map((data) => {
+                    return data + 1
+                })
+            )
+            .subscribe({
+                next: (count) => {
+                    console.log(count)
+                },
+                error: (err) => {
+                    console.log(err)
+                },
+                complete: (count) => {
+                    console.log('Count equal 5 successfully')
+                },
+            })
+    }
+
+    ngOnDestroy(): void {
+        this.firstObservable.unsubscribe()
+    }
+}
+```
+
+5. ### Subjects
+
+-   **Subjects** use to send data to a lot `Observers` (`multicasting`)
+-   **Subjects** can use `next()` in outside, **Observables** can't use `next()` in outside

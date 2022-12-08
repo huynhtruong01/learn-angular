@@ -1,0 +1,20 @@
+<div class="product">
+    <div class="product-wrapper">
+        <div class="product__content">
+            <h4 class="product__title"><a [routerLink]="[product.id]" routerLinkActive="active"
+                    (click)="handleScrollTop()">{{product.name}}</a>
+            </h4>
+            <p class="product__desc">{{product.description}}</p>
+            <p class="product__price">${{product.price}}</p>
+        </div>
+        <div class="product__img">
+            <img src={{product.img}} alt={{product.name}}>
+        </div>
+    </div>
+    <div class="btns">
+        <button class="btn-edit" [routerLink]="[product.id, 'edit']"><i class="fa-solid fa-pen"></i> Edit</button>
+        <button class="btn-delete" (click)="handleDelete()">
+            <i class="fa-solid fa-trash"></i> Delete
+        </button>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+.form__product {
+    text-align: center;
+    width: 450px;
+    margin: auto;
+}
+
+.product__input {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2px;
+
+    margin: 16px 0;
+}
+
+.product__input label {
+    text-align: left;
+    font-weight: bold;
+}
+
+.product__input input {
+    padding: 12px;
+    border-radius: 5px;
+}
+
+.product__input small {
+    color: #dc3535;
+    text-align: left;
+}
+
+.btn-product-add {
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: #fff;
+    background-color: #dc3535;
+    font-weight: 600;
+}

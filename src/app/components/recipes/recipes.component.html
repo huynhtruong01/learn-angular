@@ -1,4 +1,9 @@
 <div class="container mx-auto">
     Recipes
-    <a href="" routerLink="/recipes" class="text-decoration-underline">Reload page</a>
+    <a href="" [routerLink]="['../recipes']" class="text-decoration-underline">Reload page</a>
+    <p>Round {{count}}s</p>
+    <p>{{time | formatDate}}</p>
+    <p *ngIf="isActivated">Activated</p>
+    <button (click)="handleActivated()">Activate</button>
+
 </div>

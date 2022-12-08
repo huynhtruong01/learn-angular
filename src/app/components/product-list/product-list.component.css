@@ -1,0 +1,17 @@
+.product__container {
+    display: flex;
+    column-gap: 30px;
+}
+
+.btn-add a {
+    padding: 10px 20px;
+    background-color: #dc3535cc;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
+}
+
+.btn-add:hover a {
+    background-color: #dc3535;
+}
