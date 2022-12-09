@@ -1,0 +1,13 @@
+button {
+    padding: 10px 20px;
+    color: #fff;
+}
+
+.btn-login {
+    background-color: #00005c;
+    margin-right: 20px;
+}
+
+.btn-logout {
+    background-color: #dc3535;
+}

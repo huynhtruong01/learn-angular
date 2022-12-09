@@ -10,9 +10,11 @@ import { AccountListComponent } from './components/account-list/account-list.com
 import { ActiveUsersComponent } from './components/active-users/active-users.component'
 import { HeaderComponent } from './components/header/header.component'
 import { InactiveUsersComponent } from './components/inactive-users/inactive-users.component'
+import { ModalDeleteComponent } from './components/modals/modal-delete/modal-delete.component'
 import { NotFoundComponent } from './components/not-found/not-found.component'
 import { ProductDetailComponent } from './components/product-detail/product-detail.component'
 import { ProductAddComponent } from './components/product-list/product-add/product-add.component'
+import { ProductEditComponent } from './components/product-list/product-edit/product-edit.component'
 import { ProductFormComponent } from './components/product-list/product-form/product-form.component'
 import { ProductItemComponent } from './components/product-list/product-item/product-item.component'
 import { ProductListComponent } from './components/product-list/product-list.component'
@@ -22,10 +24,12 @@ import { ServersComponent } from './components/servers/servers.component'
 import { ShoppingItemComponent } from './components/shopping-list/shopping-item/shopping-item.component'
 import { ShoppingListComponent } from './components/shopping-list/shopping-list.component'
 import { HomeComponent } from './features/home/home.component'
-import { UserService } from './services/user.service';
-import { ModalDeleteComponent } from './components/modals/modal-delete/modal-delete.component';
-import { ProductEditComponent } from './components/product-list/product-edit/product-edit.component';
 import { FormatDatePipe } from './pipes/format-date.pipe'
+import { TruncatePipe } from './pipes/truncate.pipe'
+import { UserService } from './services/user.service';
+import { Servers2Component } from './components/servers2/servers2.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { LoginComponent } from './components/auth/login/login.component'
 
 @NgModule({
     declarations: [
@@ -52,6 +56,10 @@ import { FormatDatePipe } from './pipes/format-date.pipe'
         ModalDeleteComponent,
         ProductEditComponent,
         FormatDatePipe,
+        TruncatePipe,
+        Servers2Component,
+        FilterPipe,
+        LoginComponent,
     ],
     imports: [BrowserModule, FormsModule, AppRoutingModule, ReactiveFormsModule],
     providers: [UserService],

@@ -14,14 +14,12 @@ export class RecipesComponent implements OnInit, OnDestroy {
     count: number
     isActivated: boolean = false
     time: Date = new Date()
+    text: string =
+        'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
 
     constructor(private commonService: CommonService) {}
 
     ngOnInit(): void {
-        // this.firstSubscription = interval(1000).subscribe((count) => {
-        //     console.log(count)
-        // })
-
         const customObservable = new Observable((observer) => {
             let count: number = 0
             setInterval(() => {

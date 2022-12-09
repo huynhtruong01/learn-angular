@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { AccountDetailComponent } from './components/account-detail/account-detail.component'
 import { AccountListComponent } from './components/account-list/account-list.component'
+import { LoginComponent } from './components/auth/login/login.component'
 import { NotFoundComponent } from './components/not-found/not-found.component'
 import { ProductDetailComponent } from './components/product-detail/product-detail.component'
 import { ProductAddComponent } from './components/product-list/product-add/product-add.component'
@@ -10,13 +11,16 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { RecipesComponent } from './components/recipes/recipes.component'
 import { ServerItemComponent } from './components/servers/server-item/server-item.component'
 import { ServersComponent } from './components/servers/servers.component'
+import { Servers2Component } from './components/servers2/servers2.component'
 import { ShoppingItemComponent } from './components/shopping-list/shopping-item/shopping-item.component'
 import { ShoppingListComponent } from './components/shopping-list/shopping-list.component'
 import { HomeComponent } from './features/home/home.component'
+import { AuthGuardService } from './services/auth-guard.service'
 
 const routes: Routes = [
     {
         path: '',
+        canActivate: [AuthGuardService],
         component: HomeComponent,
     },
     {
@@ -65,6 +69,7 @@ const routes: Routes = [
     },
     {
         path: 'products',
+        canActivate: [AuthGuardService],
         children: [
             {
                 path: 'add',
@@ -88,6 +93,14 @@ const routes: Routes = [
                 ],
             },
         ],
+    },
+    {
+        path: 'servers2',
+        component: Servers2Component,
+    },
+    {
+        path: 'login',
+        component: LoginComponent,
     },
     { path: '**', component: NotFoundComponent },
 ]

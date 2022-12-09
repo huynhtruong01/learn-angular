@@ -1,0 +1,31 @@
+<div class="servers2">
+    <h3>App status: {{appStatus | async}}</h3>
+    <hr>
+    <div class="server2-filters">
+        <select [value]="filter" [(ngModel)]="filter" class="server2-select">
+            <option value="">--Select all--</option>
+            <option value="stable">Stable</option>
+            <option value="offline">Offline</option>
+        </select>
+        <input type="text" class="server2-search" [(ngModel)]='search' placeholder="Enter search...">
+        <input type="text" class="server2-add" [(ngModel)]="addVal" placeholder="Add server...">
+        <button class="btn-add-server2" (click)="handleAddNewServer()">Add</button>
+    </div>
+    <hr>
+    <div class="server2-list">
+        <ng-container *ngFor="let server of serverList | filter:filter:search:propName">
+            <div class="server2-item"
+                [ngClass]="{error: server.status === 'offline', success: server.status === 'stable'}">
+                <p>
+                    <span>{{server.name | uppercase}}</span> |
+                    <span>{{server.instanceType | uppercase}}</span> |
+                    <span>{{server.started | formatDate}}</span>
+                </p>
+                <p class="server2-status"
+                    [ngClass]="{error: server.status === 'offline', success: server.status === 'stable'}">
+                    <span>{{server.status}}</span>
+                </p>
+            </div>
+        </ng-container>
+    </div>
+</div>

@@ -19,10 +19,29 @@
   - [Sharing data parent to child and otherwise](#sharing-data-parent-to-child-and-otherwise)
   - [Lifecycle Hooks](#lifecycle-hooks)
   - [Services](#services)
+    - [Services](#services-1)
+    - [Why would you Need Services:](#why-would-you-need-services)
+    - [How to Create Services:](#how-to-create-services)
+    - [Hierarchical Injector](#hierarchical-injector)
   - [Dependency Injection (DI)](#dependency-injection-di)
   - [Routing](#routing)
+    - [Install routing](#install-routing)
+    - [Pass Parameters](#pass-parameters)
+    - [Fetching router parameter (Get data from URL by snapshot)](#fetching-router-parameter-get-data-from-url-by-snapshot)
+    - [Passing queryParams \& Fragments](#passing-queryparams--fragments)
+    - [Nested Routes](#nested-routes)
+    - [Protecting Route](#protecting-route)
   - [Pipes](#pipes-1)
+    - [Concept Pipes](#concept-pipes)
+    - [Use Pipes](#use-pipes)
+    - [Custom Pipes](#custom-pipes)
   - [Observables](#observables)
+    - [Concept Observables \& Observer](#concept-observables--observer)
+    - [How to code Observables with subscribe \& unsubscribe](#how-to-code-observables-with-subscribe--unsubscribe)
+    - [Custom a Observable with: next, error, complete](#custom-a-observable-with-next-error-complete)
+    - [Pipes with operators `rxjs`](#pipes-with-operators-rxjs)
+    - [Subjects](#subjects)
+  - [Making HTTP request](#making-http-request)
 
 ---
 
@@ -820,7 +839,7 @@ export class Foo implements OnInit, OnDestroy {
 
 -   Create file services: `ng g s file-name` or `ng generate service file-name`
 
-1. ### Services
+### Services
 
 -   **Services**: is the functions code that you can reuse for many difference component. You can use it for purpose:
 
@@ -828,9 +847,9 @@ export class Foo implements OnInit, OnDestroy {
     -   Shared code logic for many difference components to use together.
     -   Help your code cleaner and don't repeat your code logic in the many place difference component.
 
-2. ### Why would you Need Services:
+### Why would you Need Services:
 
-3. ### How to Create Services:
+### How to Create Services:
 
 **common.service.ts**
 
@@ -869,7 +888,7 @@ export class AppComponent {
 
 **Providers** help you how create service.
 
-4. ### Hierarchical Injector
+### Hierarchical Injector
 
 ---
 
@@ -879,7 +898,7 @@ export class AppComponent {
 
 ## Routing
 
-1. ### Install routing
+### Install routing
 
 -   **Install package**: `npm install @angular/router`
 -   **Generate file router**: `app-routing.module.ts`
@@ -946,7 +965,7 @@ export class AppRoutingModule {}
 </nav>
 ```
 
-2. ### Pass Parameters
+### Pass Parameters
 
 ```ts
 const routes: Routes = [
@@ -979,7 +998,7 @@ const routes: Routes = [
 export class AppRoutingModule {}
 ```
 
-3. ### Fetching router parameter (Get data from URL by snapshot)
+### Fetching router parameter (Get data from URL by snapshot)
 
 -   You can inject `ActivatedRoute` to component to use.
 -   Should use `snapshot` for first initialization component.
@@ -1032,7 +1051,7 @@ export class ShoppingItemComponent implements OnInit, OnDestroy {
 }
 ```
 
-4. ### Passing queryParams & Fragments
+### Passing queryParams & Fragments
 
 -   **HTML File**: use `queryParams` to pass param, `fragment`
 
@@ -1067,7 +1086,7 @@ this.route.snapshot.queryParams
 this.route.snapshot.fragment
 ```
 
-5. ### Nested Routes
+### Nested Routes
 
 -   You can use `nested routes` like this:
 
@@ -1180,6 +1199,47 @@ export class AppRoutingModule {}
 },
 ```
 
+### Protecting Route
+
+-   Sometimes we interceptor user when user isn't login, and we want to user must be login before go to home page
+-   We use `CanActivate` of `router`
+
+```ts
+import { Injectable } from '@angular/core'
+import {
+    ActivatedRouteSnapshot,
+    CanActivate,
+    Router,
+    RouterStateSnapshot,
+} from '@angular/router'
+import { Observable } from 'rxjs'
+import { LoginService } from './login.service'
+
+@Injectable({
+    providedIn: 'root',
+})
+export class AuthGuardService implements CanActivate {
+    constructor(private loginService: LoginService, private router: Router) {}
+
+    canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot
+    ): Observable<boolean> | Promise<boolean> | boolean {
+        return this.loginService.isAuthenticated().then((authenticated: any) => {
+            if (authenticated) {
+                return true
+            } else {
+                return this.router.navigate(['/login'])
+            }
+        })
+    }
+}
+```
+
+-   Return `true` navigated continue, otherwise cancelled.
+
+> You can read more [CanActivate](https://angular.io/api/router/CanActivate)
+
 ---
 
 ## Pipes
@@ -1192,11 +1252,11 @@ export class AppRoutingModule {}
 
 ---
 
-1. ### Concept Pipes
+### Concept Pipes
 
 -   **Pipes** is transform old data to new data
 
-2. ### Use Pipes
+### Use Pipes
 
 ![Pipes available](./assets/images/pipes-template.png)
 
@@ -1204,7 +1264,7 @@ export class AppRoutingModule {}
 <p>{{time | date}}</p>
 ```
 
-1. ### Custom Pipes
+### Custom Pipes
 
 -   Install pipes: `ng g p name-pipe`
 
@@ -1233,6 +1293,49 @@ export class FormatDatePipe implements PipeTransform {
 <p>{{ time | formatDate }}</p>
 ```
 
+-   Custom `Pipes` with a or multiples arguments
+
+```ts
+import { Pipe, PipeTransform } from '@angular/core'
+
+@Pipe({
+    name: 'truncate',
+})
+export class TruncatePipe implements PipeTransform {
+    transform(text: string, maxWord: number, isUppercase: boolean = false) {
+        const newText: string = `${text.split(' ').slice(0, maxWord).join(' ')}...`
+        if (isUppercase) return newText.toUppercase()
+        return newText
+    }
+}
+```
+
+**HTML**
+
+```html
+<p>{{text | truncate: 5 : true}}</p>
+```
+
+-   **Pipe with async**:
+
+> You can read more [AsyncPipe](https://angular.io/api/common/AsyncPipe)
+
+**component.ts**
+
+```ts
+appStatus: Promise<string> = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve('status')
+    }, 2000)
+})
+```
+
+**HTML**
+
+```html
+<h3>App status: {{ appStatus | async }}</h3>
+```
+
 ---
 
 ## Observables
@@ -1247,7 +1350,7 @@ export class FormatDatePipe implements PipeTransform {
 
 ---
 
-1. ### Concept Observables & Observer
+### Concept Observables & Observer
 
 -   **Observables** is as `Promise`, it handle a lot of value async, it is `streams`, to transform to data you want. It is a `Function (Class)`. (`Tức là, nó giống như Promise, nhưng nó sẽ ko thực thi ngay lập tức như Promise, mà phải subscribe mới thực thi đc, nó có thể thực thi được nhiều dữ liệu và biến đổi dữ liệu, có thể hủy bỏ Observable, nó nhiều operators đc dùng còn Promise thì ko`)
 
@@ -1255,7 +1358,7 @@ export class FormatDatePipe implements PipeTransform {
 
 -   **Subscription** is result after implementation a `Observable`, use to destroy handle of Observable.
 
-2. ### How to code Observables with subscribe & unsubscribe
+### How to code Observables with subscribe & unsubscribe
 
 ```ts
 import {interval, Subscription} from 'rxjs'
@@ -1276,7 +1379,7 @@ export class HomeComponent implements OnInit, OnDestroy{
 }
 ```
 
-3. ### Custom a Observable with: next, error, complete
+### Custom a Observable with: next, error, complete
 
 ```ts
 import { Observable, Subscription } from 'rxjs'
@@ -1319,7 +1422,7 @@ export class HomeComponent implements OnInit {
 }
 ```
 
-4. ### Pipes with operators `rxjs`
+### Pipes with operators `rxjs`
 
 -   **Pipes** to transform data you want.
 
@@ -1371,7 +1474,11 @@ export class HomeComponent implements OnInit {
 }
 ```
 
-5. ### Subjects
+### Subjects
 
 -   **Subjects** use to send data to a lot `Observers` (`multicasting`)
 -   **Subjects** can use `next()` in outside, **Observables** can't use `next()` in outside
+
+---
+
+## Making HTTP request
