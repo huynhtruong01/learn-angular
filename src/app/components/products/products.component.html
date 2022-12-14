@@ -1,0 +1,9 @@
+<div class="products d-flex flex-wrap">
+    <div class="product shadow-sm m-2 p-3 rounded" *ngFor="let product of products">
+        <h3>
+            <a [routerLink]="['/products2', product.id]" appHighlightText>{{product.name}}</a>
+        </h3>
+        <p>{{product.description}}</p>
+        <p class="">${{product.price}}</p>
+    </div>
+</div>

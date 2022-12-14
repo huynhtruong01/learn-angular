@@ -14,8 +14,6 @@ export class ShoppingItemComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute) {}
 
     ngOnInit(): void {
-        console.log(this.route.snapshot.queryParams)
-        console.log(this.route.snapshot.fragment)
         this.id = Number.parseInt(this.route.snapshot.params['id'])
         this.paramSubscription = this.route.params.subscribe((param: Params) => {
             this.id = Number.parseInt(param['id'])

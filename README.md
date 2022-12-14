@@ -10,6 +10,10 @@
   - [Event Binding](#event-binding)
   - [Two-way binding](#two-way-binding)
   - [Directives](#directives)
+    - [Component directives](#component-directives)
+    - [Attribute directives](#attribute-directives)
+    - [Structural directives](#structural-directives)
+    - [How to create directives attribute](#how-to-create-directives-attribute)
   - [Content Projection (ng-content)](#content-projection-ng-content)
     - [How to use it](#how-to-use-it)
   - [ng-template, ngTemplateOutlet and ng-container](#ng-template-ngtemplateoutlet-and-ng-container)
@@ -42,6 +46,21 @@
     - [Pipes with operators `rxjs`](#pipes-with-operators-rxjs)
     - [Subjects](#subjects)
   - [Making HTTP request](#making-http-request)
+    - [Introduce Interceptor](#introduce-interceptor)
+    - [Change Request Interceptor](#change-request-interceptor)
+    - [Response Interceptors](#response-interceptors)
+    - [Multi Interceptors](#multi-interceptors)
+  - [Lazy loading](#lazy-loading)
+    - [Set up lazy loading](#set-up-lazy-loading)
+    - [Pre Lazy Loading](#pre-lazy-loading)
+  - [Standalone Component](#standalone-component)
+    - [Why we want Standalone Component \& How setup](#why-we-want-standalone-component--how-setup)
+    - [Standalone Component](#standalone-component-1)
+    - [Standalone Directive](#standalone-directive)
+    - [Standalone Root Component](#standalone-root-component)
+    - [Services \& Standalone Component](#services--standalone-component)
+    - [Routing with Standalone Component](#routing-with-standalone-component)
+  - [NgRx](#ngrx)
 
 ---
 
@@ -347,41 +366,40 @@ export class Component {
 
 ## Directives
 
-1. ### Component directives
+-   Install directives:
 
-2. ### Attribute directives
-
--   You can generate directives: `ng generate directive file-name`
-
-```ts
-import { Directive } from '@angular/core'
-
-@Directive({
-    selector: '[appHighlight]',
-})
-export class HighlightDirective {
-    constructor() {}
-}
 ```
+ng generate directive file-name
+# or
+ng g d file-name
+```
+
+### Component directives
+
+### Attribute directives
 
 -   **NgClass**: adds and removes a set of CSS classes.
 
 ```html
-<!-- toggle the "special" class on/off with a property -->
 <div [ngClass]="isSpecial ? 'special' : ''">This div is special</div>
+<div [ngClass]="{special: isSpecial}">This div is special</div>
 ```
 
 -   **NgStyle**: style for template
 
+```html
+<div [ngStyle]="backgroundColor: odd % 2 === 0 ? 'red' : ''">...</div>
+```
+
 -   **NgModel**: two-way binding, use display and update property
 
-1. ### Structural directives
+### Structural directives
 
 -   **NgIf**: it use check conditional in HTML
 
 ```html
 <div *ngIf="time; else noTime">Time: {{time}}</div>
-<ng-template #noTime> No time. </ng-template>
+<ng-template #noTime>No time.</ng-template>
 ```
 
 -   **NgTemplate**: It collect all element HTML need to hide or show, render in HTML code `(Nó dùng để gom code HTML khi dùng nó để ẩn hoặc hiện trên website khi kết hợp với NgIf)`
@@ -415,6 +433,44 @@ Welcome <ng-container *ngIf="title">to <i>the</i> {{title}} world.</ng-container
     <div *ngSwitchCase="false">Fahrenheit</div>
     <div *ngSwitchDefault>Default</div>
 </div>
+```
+
+> `ngFor` and `ngIf` can't together in a tag (`kHÔNG THỂ ĐẶT CHUNG VỚI NHAU ĐC :((`)
+
+```html
+<div class="products">
+    <div class="product" *ngFor="let product of products" *ngIf="product.id !== 1">
+        ....
+    </div>
+    <!-- ERROR -->
+    <div></div>
+</div>
+```
+
+### How to create directives attribute
+
+```ts
+import { Directive, ElementRef, OnInit } from '@angular/core'
+
+@Directive({
+    selector: '[appHighlightText]',
+})
+export class HighlightTextDirective implements OnInit {
+    constructor(private elementRef: ElementRef) {}
+
+    ngOnInit(): void {
+        this.elementRef.nativeElement.style.color = 'red'
+    }
+}
+
+// `elementRef` use to referent element to style or more...
+```
+
+**html** file
+
+```html
+<h3 appHighlightTextDirective>Title....</h3>
+<!-- text has color red -->
 ```
 
 ---
@@ -1482,3 +1538,362 @@ export class HomeComponent implements OnInit {
 ---
 
 ## Making HTTP request
+
+### Introduce Interceptor
+
+-   **Interceptor**: use to intercept a `request` or a `response` to change headers, change `request` or `response`
+
+**Create a services**
+
+```ts
+import { HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+
+@Injectable({
+    providedIn: 'root',
+})
+export class AuthInterceptorService implements HttpInterceptor {
+    intercept(req: HttpRequest<any>, next: HttpHandler) {
+        return next.handle(req)
+    }
+
+    constructor() {}
+}
+```
+
+**Then, we provide modules**
+
+```ts
+import { HTTP_INTERCEPTORS } from '@angular/common/http'
+
+@NgModule({
+    declarations: [AppComponent],
+    imports: [BrowserModule],
+    providers: [
+        UserService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptorService,
+            multi: true, // use multi interceptor
+        },
+    ],
+    bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+### Change Request Interceptor
+
+-   **Change Request Interceptor**: use to change `request` before send to server
+
+```ts
+import {
+    HttpHandler,
+    HttpHeaders,
+    HttpInterceptor,
+    HttpRequest,
+} from '@angular/common/http'
+import { Injectable } from '@angular/core'
+
+@Injectable({
+    providedIn: 'root',
+})
+export class AuthInterceptorService implements HttpInterceptor {
+    intercept(req: HttpRequest<any>, next: HttpHandler) {
+        // we can request headers before send to server
+
+        // create new headers
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Auth: 'xyz',
+        })
+
+        // clone new request
+        req = req.clone({
+            headers,
+        })
+        return next.handle(req)
+    }
+
+    constructor() {}
+}
+```
+
+### Response Interceptors
+
+-   **Response Interceptors**: we can change `response` before back to data for client. We can use `pipe` and `rxjs/operators`
+
+```ts
+import {
+    HttpHandler,
+    HttpHeaders,
+    HttpInterceptor,
+    HttpRequest,
+    HttpEventType,
+} from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { map } from 'rxjs/operators'
+
+@Injectable({
+    providedIn: 'root',
+})
+export class AuthInterceptorService implements HttpInterceptor {
+    intercept(req: HttpRequest<any>, next: HttpHandler) {
+        // we can request headers before send to server
+
+        // create new headers
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Auth: 'xyz',
+        })
+
+        // clone new request
+        req = req.clone({
+            headers,
+        })
+        return next.handle(req).pipe(
+            map((event) => {
+                if (event.type === HttpEventType.Response) {
+                    console.log(event.body)
+                    // event return HttpResponse object includes: headers, body, ok, status, type, url
+                }
+            })
+        )
+    }
+
+    constructor() {}
+}
+```
+
+**HttpEventType** is `enum`
+
+```ts
+enum HttpEventType {
+  Sent // 0
+  UploadProgress // 1
+  ResponseHeader // 2
+  DownloadProgress // 3
+  Response // 4
+  User // 5
+}
+```
+
+### Multi Interceptors
+
+-   You can use `multi interceptor`
+-   You can provide `multi interceptor`
+
+```ts
+providers: [
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptorService,
+        multi: true,
+    },
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: LoginInterceptorService,
+        multi: true,
+    },
+], // it run from top to down, AuthInterceptorService -> LoginInterceptorService
+```
+
+---
+
+## Lazy loading
+
+-   **Lazy loading** is use to delay all router and only running this router match patch router.
+-   **Lazy loading** help your website load data long time, help your website load faster.
+
+### Set up lazy loading
+
+**app.module.ts**: 🎫🎫 Notion: Let's remove the file use for child lazy loading
+
+```ts
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { NgModule } from '@angular/core'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { BrowserModule } from '@angular/platform-browser'
+import { RouterModule } from '@angular/router'
+import { AppRoutingModule } from './app-routing.module'
+import { AppComponent } from './app.component'
+
+@NgModule({
+    declarations: [AppComponent, HeaderComponent],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        ProductsComponent,
+        RouterModule,
+    ],
+    providers: [
+        UserService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptorService,
+            multi: true,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: LoginInterceptorService,
+            multi: true,
+        },
+    ],
+    bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+**app-routing.module.ts**
+
+```ts
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
+import { HomeComponent } from './features/home/home.component'
+import { AuthGuardService } from './services/auth-guard.service'
+import { NotFoundComponent } from './components/not-found/not-found.component'
+
+const routes: Routes = [
+    {
+        path: '',
+        canActivate: [AuthGuardService],
+        component: HomeComponent,
+    },
+    {
+        path: 'products',
+        canActivate: [AuthGuardService],
+        loadChildren: () =>
+            import('./components/product-list/product-list.module').then(
+                (mod) => mod.ProductListModule
+            ),
+    },
+    { path: '**', component: NotFoundComponent },
+]
+
+@NgModule({
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+-   We can declare:
+
+```ts
+loadChildren: () => import('./path/file.module.ts...').then((mod) => mod.FileModule)
+```
+
+**file-module.module.ts**: import all the file you use in routing
+
+```ts
+import { CommonModule } from '@angular/common'
+import { HttpClientModule } from '@angular/common/http'
+import { NgModule } from '@angular/core'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { BrowserModule } from '@angular/platform-browser'
+import { RouterModule } from '@angular/router'
+import { ProductAddComponent } from './product-add/product-add.component'
+import { ProductEditComponent } from './product-edit/product-edit.component'
+import { ProductFormComponent } from './product-form/product-form.component'
+import { ProductItemComponent } from './product-item/product-item.component'
+import { ProductListRoutingModule } from './product-list-routing.module'
+import { ProductListComponent } from './product-list.component'
+
+@NgModule({
+    declarations: [
+        ProductAddComponent, // it in routing
+        ProductEditComponent,
+        ProductItemComponent,
+        ProductFormComponent,
+        ProductListComponent,
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        ProductListRoutingModule,
+    ],
+})
+export class ProductListModule {}
+```
+
+**file-routing.module.ts**: You must use `forChild` instead of `forRoot`
+
+```ts
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
+import { ProductDetailComponent } from './../product-detail/product-detail.component'
+import { ProductAddComponent } from './product-add/product-add.component'
+import { ProductEditComponent } from './product-edit/product-edit.component'
+import { ProductListComponent } from './product-list.component'
+
+const routes: Routes = [
+    {
+        path: '',
+        component: ProductListComponent,
+        pathMatch: 'full',
+    },
+    {
+        path: 'add',
+        component: ProductAddComponent,
+        pathMatch: 'full',
+    },
+    {
+        path: ':id/edit',
+        component: ProductEditComponent,
+        pathMatch: 'full',
+    },
+    {
+        path: ':id',
+        component: ProductDetailComponent,
+        pathMatch: 'full',
+    },
+]
+
+@NgModule({
+    imports: [RouterModule.forChild(routes)], // 🎫🎫 notion
+    exports: [RouterModule],
+})
+export class ProductListRoutingModule {}
+```
+
+### Pre Lazy Loading
+
+-   **Pre-Loading**: is method, load `all lazy loading` that you aren't need to click router to load this route
+-   `PreloadAllModules`
+
+```ts
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
+@NgModule({
+    imports: [
+        RouterModule.forRoot(routes, {
+            preloadingStrategy: PreloadAllModules,
+        }),
+    ],
+    exports: [RouterModule],
+})
+```
+
+---
+
+## Standalone Component
+
+### Why we want Standalone Component & How setup
+
+### Standalone Component
+
+### Standalone Directive
+
+### Standalone Root Component
+
+### Services & Standalone Component
+
+### Routing with Standalone Component
+
+---
+
+## NgRx
