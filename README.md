@@ -61,6 +61,8 @@
     - [Services \& Standalone Component](#services--standalone-component)
     - [Routing with Standalone Component](#routing-with-standalone-component)
   - [NgRx](#ngrx)
+  - [RxJS](#rxjs)
+    - [Pipeable Operators](#pipeable-operators)
 
 ---
 
@@ -1897,3 +1899,112 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
 ---
 
 ## NgRx
+
+---
+
+## RxJS
+
+### Pipeable Operators
+
+-   **Pipeable Operators**: allow us to transform data of `Observable` in countless ways. Example `map`, `filter`, it provide a fallback for error scenario, or start new `Subscriptions` to some other `Observables`. (`Cho phép chúng ta thay đổi data của Observable, cung cấp cho chúng ta fallback cho kịch bản bị lỗi, hoặc thậm chí bắt đầu Subscriptions mới cho 1 vài Observables`)
+
+-   **Operators**: `filter`, `map`, `tap`, `debounceTime`, `catchError`, `concat/switch/mergeMap`
+
+-   **Operator Stacking**
+
+![Operator Stacking](./assets/images/operators-stacking.png)
+
+1. **filter**:
+
+-   **filter**: Filter data as `filter arrays`, create new a data `filter by conditional`, don't change init data.
+
+```ts
+filter((x) => x === 1)
+```
+
+**Examples:**
+
+```ts
+const newFeeds = new Observable<string>((subscriber) => {
+    subscriber.next('Sport')
+    subscriber.next('Business')
+    subscriber.next('Gaming')
+    subscriber.next('Sport')
+})
+
+const filterNewFeeds = newFeeds
+    .pipe(filter((data) => data === 'Sport'))
+    .subscribe((data) => console.log(data))
+// Sport
+// Sport
+// ** it is not reference
+
+newFeeds.subscribe((data) => console.log(data))
+// Sport
+// Business
+// Gaming
+// Sport
+```
+
+2. **map**
+
+-   **map**: to transform init data to another data as `map arrays`.
+
+```ts
+map((x) => x * 2)
+```
+
+**Example**
+
+```ts
+const newFeeds = new Observable<string>((subscriber) => {
+    subscriber.next('Sport')
+    subscriber.next('Business')
+    subscriber.next('Gaming')
+    subscriber.next('Sport')
+})
+
+const filterNewFeeds = newFeeds
+    .pipe(filter((data) => data === `Type ${data}`))
+    .subscribe((data) => console.log(data))
+// Type Sport
+// Type Business
+// Type Gaming
+// Type Sport
+```
+
+3. **tap**
+
+-   **tap**: Used to perform side-effects for notifications from the source observable. (`Nó được dùng để làm side-effects để thông báo cái source observable từng cái operator, nó sẽ chạy theo từng cái operator trong pipe`).
+-   **tap**: To see how `pipe` work the between stage of the operator pipelines.
+
+```ts
+tap(data => {
+    ...
+})
+```
+
+**Example**
+
+```ts
+of(1, 2, 3, 9, 12)
+    .pipe(
+        map((data) => data * 2),
+        tap((data) => console.log('type: ' + data)),
+        filter((data) => data >= 5)
+    )
+    .subscribe((data) => console.log(data))
+
+// type: 2
+// type: 4
+// type: 6
+// 6
+// type: 18
+// 18
+// type: 24
+// 24
+```
+
+> **Notion**: It is not working when `Observable` was not `subscribe` and it is not change the notifications in the `Observable stream`.
+
+4. **debounceTime**
