@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
-import { Observable, of } from 'rxjs'
-import { filter, map, tap } from 'rxjs/operators'
+import { ResolveEnd } from '@angular/router'
+import { from, fromEvent } from 'rxjs'
+import { JQueryStyleEventEmitter } from 'rxjs/internal/observable/fromEvent'
 import { Account, User } from './models'
 import { AccountService } from './services/account.service'
 import { UserService } from './services/user.service'
@@ -41,13 +42,5 @@ export class AppComponent implements OnInit {
         // newFeeds
         //     .pipe(filter((data) => data === 'Sport'))
         //     .subscribe((data) => console.log(data))
-
-        of(1, 2, 3, 9, 12)
-            .pipe(
-                map((data) => data * 2),
-                tap((data) => console.log('type: ' + data)),
-                filter((data) => data >= 5)
-            )
-            .subscribe((data) => console.log(data))
     }
 }

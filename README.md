@@ -62,6 +62,7 @@
     - [Routing with Standalone Component](#routing-with-standalone-component)
   - [NgRx](#ngrx)
   - [RxJS](#rxjs)
+    - [Create Functions](#create-functions)
     - [Pipeable Operators](#pipeable-operators)
 
 ---
@@ -1903,6 +1904,303 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
 ---
 
 ## RxJS
+
+### Create Functions
+
+-   **of**: use to convert arguments to an `observable` sequence, instead of use `new Observable`. (`Dùng để convert các argument thành 1 Observables, thay dùng new Observable thủ công`)
+
+> of<T>(...args: (SchedulerLike | T)[]): Observable<T>
+
+> Each arguments becomes to _next_ notification and 1 complete. (`Nó sẽ emit từng argument trong of, chứ không phải log toàn bộ argument trong of và sau khi tất cả argument emit thì nó sẽ complete`)
+
+![of RxJS](./assets/images/of.png)
+
+```ts
+import { of } from 'rxjs'
+
+of(1, 2, 3).subscribe((data) => {
+    console.log(data)
+    // 1
+    // 2
+    // 3
+})
+
+// or
+
+of(1, 2, 3).subscribe({
+    next: (data) => {
+        console.log(data)
+    },
+    error: (error) => {
+        console.log(`Error: ${error}`)
+    },
+    complete: () => {
+        console.log('end')
+    },
+})
+
+// 1
+// 2
+// 3
+// end
+```
+
+-   **from**: use to create `an Observable` with argument: `Array`, `Promise`, `an Array-like object`, `an iterable object`, `Observable-like object`. (`Dùng để tạo 1 Observable khi cho argument: array, promise, array-like object, iterable object, observable-like object`)
+
+> from<T>(input: ObservableInput<T>, scheduler?: SchedulerLike): Observable<T>
+
+> Convert almost anything to an Observable and 1 complete. (`Convert mọi thứ thành 1 Observable và 1 complete`)
+
+![from Rxjs](assets/images/from.png)
+
+**array**
+
+```ts
+import { from } from 'rxjs'
+
+from([1, 2, 3]).subscribe({
+    next: (data) => {
+        console.log(data)
+    },
+    error: (error) => {
+        console.log(error)
+    },
+    complete: () => {
+        console.log('Complete')
+    },
+})
+// 1
+// 2
+// 3
+// Complete
+```
+
+**Promise**
+
+```ts
+import { from } from 'rxjs'
+
+const promise$ = new Promise((resolve, reject) => {
+    resolve('Hello')
+})
+
+from(promise$).subscribe({
+    next: (data) => {
+        console.log(data)
+    },
+    error: (error) => {
+        console.log(error)
+    },
+    complete: () => {
+        console.log('Complete')
+    },
+})
+// Hello
+// Complete
+```
+
+-   **fromEvent**: Create an Observable that emits events of a specific type coming from the given event target. It like subscribe `addEventListener` and unsubscribe `removeEventListener`. (`Dùng để tạo 1 Observable mà emit event của 1 loại cụ thể đến từ event target. Nó subscribe như addEventListener và unsubscribe như removeEventListener`)
+
+> fromEvent<T>(target: any, eventName: string, options?: EventListenerOptions | ((...args: any[]) => T), resultSelector?: (...args: any[]) => T): Observable<T>
+
+> Creates an Observable from DOM events, or Node.js EventEmitter events or others.
+> fromEvent(element, event)
+
+![fromEvent Rxjs](./assets/images/fromEvent.png)
+
+```ts
+const btnElement = document.querySelector('button#btn-click')
+
+// subscribe
+// btnElement error: because btnElement may be null
+// we can fix like this:
+
+const btnElement = document.querySelector('button#btn-click') as HTMLButtonElement
+const subscription = fromEvent<MouseEvent>(btnElement, 'click').subscribe((e) => {
+    console.log(e.x, e.y)
+})
+
+// unsubscribe after 5 seconds
+setTimeout(() => {
+    subscription.unsubscribe()
+}, 5000)
+```
+
+**Create a fromEvent**
+
+```ts
+const btnElement = document.querySelector('button#btn-click') as HTMLButtonElement
+
+let subscription
+function fromEvent$(element: Element, eventType: string) {
+    return new Observable<MouseEvent>((subscriber) => {
+        const handleClick = (e: MouseEvent) => {
+            subscriber.next(e)
+        }
+
+        // add event
+        element.addEventListener<any>(eventType, handleClick)
+
+        // remove event
+        return element.removeEventListener<any>(eventType, handleClick)
+    })
+}
+
+subscription = fromEvent$(btnElement, 'click').subscribe((e) => {
+    console.log(e)
+})
+
+setTimeout(() => {
+    console.log('unsubscribe')
+    subscription.unsubscribe()
+}, 5000)
+```
+
+-   **timer**: use create `Observable` will wait for a specificed time period and emit the number 0.
+
+> **Note**: We don't need to `unsubscribe`, because after the Observable completes, the Subscription ends. So there is no need to `unsubscribe`.
+
+```ts
+import { timer } from 'rxjs'
+
+timer(2000).subscribe({
+    next: (data) => {
+        console.log(data)
+    },
+    complete: () => {
+        console.log('Complete')
+    },
+})
+// after 2000ms return:
+// 0
+// Complete
+```
+
+**Create a timer**
+
+```ts
+const timer$ = (time: number) =>
+    new Observable<number>((subscriber) => {
+        setTimeout(() => {
+            subscriber.next(0)
+            subscriber.complete()
+        }, time)
+    })
+
+timer$.subscribe({
+    next: (data) => {
+        console.log(data)
+    },
+    complete: () => {
+        console.log('Complete')
+    },
+})
+
+// 0
+// Complete
+```
+
+-   **interval**: create an `Observable` that emits sequential numbers every specified interval of time, on a specified `SchedulerLike`. (`Tạo 1 Observable mà emit number 1 cách tuần tự trong mỗi khoảng thời gian xác định`)
+
+> Emits increase numbers periodically in time. (`Emit tăng number định kỳ trong thời gian`)
+> **Note**: `interval` never ends, we need to `unsubscribe` to stop the emissions.
+
+![interval RxJS](./assets/images/interval.png)
+
+**interval**
+
+```ts
+import { interval } from 'rxjs'
+
+interval(1000).subscribe({
+    next: (data) => {
+        console.log(data)
+    },
+    complete: () => {
+        console.log('Complete')
+    },
+})
+```
+
+**Create interval**
+
+```ts
+function interval$(time: number) {
+    let i = 0
+    return new Observable<number>((subscriber) => {
+        setInterval(() => {
+            subscriber.next(i)
+            i++
+        }, time)
+    })
+}
+
+this.subscription = interval$(1000).subscribe((data) => console.log(data))
+```
+
+-   **forkJoin**: accepts an `Array` or dictionary `Object` and return an `Onservable` that emits either an array of values in the exact order as the passed array. (`Nó sẽ nhận 1 array or 1 object và nó return 1 Observable, và nó emits 1 array value theo đúng thứ tự như khi ta truyển argument vào`), as `Promise.all()`
+
+> Wait for Observables to complete and then combine last values they emitted; complete immediately if an empty array is passed. (`Chờ cho tất cả Observables complete thì nó sẽ combine tất cả các giá trị mới nhất mà nó emit, complete ngay lập tức nếu như đó là empty array`)
+> forkJoin(...args: any[]): Observable<any>
+>
+> **Note**:
+>
+> -   `forkJoin()` only emit when all children Observable complete. If either of all Observable no complete, `forkJoin()` never emits. (`Nó sẽ emit khi tất cả Observable đều hoàn thành. Nếu 1 trong các Observable ko hoàn thành, nó sẽ ko emit`)
+> -   `forkJoin()` will throw Error when either of all children Observable throw error, and the values of children Observable same this, can't emit. (`Nếu 1 trong các Observable có lỗi xảy ra thì các Observable khác sẽ bị nuốt`)
+
+![forkJoin RxJS](./assets/images/forkJoin.png)
+
+```ts
+import { forkJoin } from 'rxjs'
+
+const randomName = ajax('https://random-data-api.com/api/v2/users')
+const randomAddress = ajax('https://random-data-api.com/api/v2/addresses')
+const randomBank = ajax('https://random-data-api.com/api/v2/banks')
+
+forkJoin([randomName, randomAddress, randomBank]).subscribe(
+    ([data1, data2, data3]: any) => {
+        console.log('Name:', data1.response.first_name)
+        console.log('Address:', data2.response.city)
+        console.log('Bank:', data3.response.bank_name)
+    }
+)
+```
+
+**error**:
+
+> **Note**:
+>
+> -   If time A < time B that time B throw Error, time A still emit and complete. (`Time A vẫn có thể emit và complete được`)
+> -   But time A > time that time B throw Error, time A has been cancel implementation, no emit and complete.
+
+-   **combineLatest**: like `forkJoin()`, and multiple Observables, it to create an `Observable` whose values are calc from lastest value of each of its input `Observable`. (`Giống với forkJoin, và nó nhận nhiều Observable, dùng để tạo Observable với những giá trị được tính toán từ những giá trị mới nhất của Observable Input`)
+
+> combineLatest<O extends ObservableInput<any>, R>(...args: any[]): Observable<R> | Observable<ObservedValueOf<O>[]>
+
+![combineLatest Rxjs](./assets/images/combineLatest.png)
+
+> **Note**:
+>
+> -   `combineLatest` emits when each `Observable` emit at least once. (`combineLatest emit when từng Observable emit it nhất 1 lần`)
+> -   Always get emit latest value of children Observable is emitting + nearest value of children `Observable` emited. (`Lun lấy cái giá trị mới nhất của children Observable đang emit + giá trị gần nhất của Observable đã emit`)
+> -   And it return `Observable` by order. (`return các Observable theo đúng thứ tự`)
+> -   `combineLatest` complete when all `Observable` complete and otherwise. (`combineLatest complete khi các Observable complete hêt và ngược lại, nếu 1 Observable ko complete thì combineLatest ko complete`)
+> -   Error like `forkJoin`
+
+```ts
+import { combineLatest, of, interval } from 'rxjs'
+
+combineLatest([of(1, 2, 3), interval(1000)]).subscribe(([numb, timeNumb]) => {
+    console.log(numb, timeNumb)
+})
+// 3, 0
+// 3, 1
+// 3, 2
+// 3, 3
+// 3, 4
+// ...
+// never emits
+```
 
 ### Pipeable Operators
 
