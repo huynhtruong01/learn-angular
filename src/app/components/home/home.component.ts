@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import {
     combineLatest,
+    concatMap,
     forkJoin,
     from,
     fromEvent,
@@ -12,6 +13,8 @@ import {
 } from 'rxjs'
 import { ajax } from 'rxjs/ajax'
 import { interval } from 'rxjs/internal/observable/interval'
+import { throwError } from 'rxjs/internal/observable/throwError'
+import { catchError } from 'rxjs/internal/operators/catchError'
 
 @Component({
     selector: 'app-home',
@@ -23,32 +26,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     constructor() {}
 
     ngOnInit(): void {
-        const randomName = ajax('https://random-data-api.com/api/v2/users')
-        const randomAddress = ajax('https://random-data-api.com/api/v2/addresses')
-        const randomBank = ajax('https://random-data-api.com/api/v2/banks')
-
-        let i = 0
-        const a$ = new Observable((subscriber) => {
-            setTimeout(() => {
-                console.log('i', i)
-                subscriber.next(i)
-                subscriber.complete()
-                i++
-            }, 3000)
-        })
-
-        let i2 = 0
-        const b$ = new Observable((subscriber) => {
-            setTimeout(() => {
-                console.log('i2', i2)
-                subscriber.next(i2)
-                i2++
-            }, 6000)
-        })
-
-        combineLatest([of(1, 2, 3), interval(1000)]).subscribe(([numb, timeNumb]) => {
-            console.log(numb, timeNumb)
-        })
+        of(1, 2, 3, 4)
+            .pipe(concatMap((x) => of(x * 2)))
+            .subscribe((data) => console.log(data))
     }
 
     ngOnDestroy(): void {

@@ -64,6 +64,7 @@
   - [RxJS](#rxjs)
     - [Create Functions](#create-functions)
     - [Pipeable Operators](#pipeable-operators)
+    - [Flattening Operators](#flattening-operators)
 
 ---
 
@@ -1907,7 +1908,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
 
 ### Create Functions
 
--   **of**: use to convert arguments to an `observable` sequence, instead of use `new Observable`. (`Dùng để convert các argument thành 1 Observables, thay dùng new Observable thủ công`)
+1.  **of**: use to convert arguments to an `observable` sequence, instead of use `new Observable`. (`Dùng để convert các argument thành 1 Observables, thay dùng new Observable thủ công`)
 
 > of<T>(...args: (SchedulerLike | T)[]): Observable<T>
 
@@ -1945,7 +1946,7 @@ of(1, 2, 3).subscribe({
 // end
 ```
 
--   **from**: use to create `an Observable` with argument: `Array`, `Promise`, `an Array-like object`, `an iterable object`, `Observable-like object`. (`Dùng để tạo 1 Observable khi cho argument: array, promise, array-like object, iterable object, observable-like object`)
+2.  **from**: use to create `an Observable` with argument: `Array`, `Promise`, `an Array-like object`, `an iterable object`, `Observable-like object`. (`Dùng để tạo 1 Observable khi cho argument: array, promise, array-like object, iterable object, observable-like object`)
 
 > from<T>(input: ObservableInput<T>, scheduler?: SchedulerLike): Observable<T>
 
@@ -1999,7 +2000,7 @@ from(promise$).subscribe({
 // Complete
 ```
 
--   **fromEvent**: Create an Observable that emits events of a specific type coming from the given event target. It like subscribe `addEventListener` and unsubscribe `removeEventListener`. (`Dùng để tạo 1 Observable mà emit event của 1 loại cụ thể đến từ event target. Nó subscribe như addEventListener và unsubscribe như removeEventListener`)
+3.  **fromEvent**: Create an Observable that emits events of a specific type coming from the given event target. It like subscribe `addEventListener` and unsubscribe `removeEventListener`. (`Dùng để tạo 1 Observable mà emit event của 1 loại cụ thể đến từ event target. Nó subscribe như addEventListener và unsubscribe như removeEventListener`)
 
 > fromEvent<T>(target: any, eventName: string, options?: EventListenerOptions | ((...args: any[]) => T), resultSelector?: (...args: any[]) => T): Observable<T>
 
@@ -2056,7 +2057,7 @@ setTimeout(() => {
 }, 5000)
 ```
 
--   **timer**: use create `Observable` will wait for a specificed time period and emit the number 0.
+4.  **timer**: use create `Observable` will wait for a specificed time period and emit the number 0.
 
 > **Note**: We don't need to `unsubscribe`, because after the Observable completes, the Subscription ends. So there is no need to `unsubscribe`.
 
@@ -2100,7 +2101,7 @@ timer$.subscribe({
 // Complete
 ```
 
--   **interval**: create an `Observable` that emits sequential numbers every specified interval of time, on a specified `SchedulerLike`. (`Tạo 1 Observable mà emit number 1 cách tuần tự trong mỗi khoảng thời gian xác định`)
+5.  **interval**: create an `Observable` that emits sequential numbers every specified interval of time, on a specified `SchedulerLike`. (`Tạo 1 Observable mà emit number 1 cách tuần tự trong mỗi khoảng thời gian xác định`)
 
 > Emits increase numbers periodically in time. (`Emit tăng number định kỳ trong thời gian`)
 > **Note**: `interval` never ends, we need to `unsubscribe` to stop the emissions.
@@ -2138,7 +2139,7 @@ function interval$(time: number) {
 this.subscription = interval$(1000).subscribe((data) => console.log(data))
 ```
 
--   **forkJoin**: accepts an `Array` or dictionary `Object` and return an `Onservable` that emits either an array of values in the exact order as the passed array. (`Nó sẽ nhận 1 array or 1 object và nó return 1 Observable, và nó emits 1 array value theo đúng thứ tự như khi ta truyển argument vào`), as `Promise.all()`
+6.  **forkJoin**: accepts an `Array` or dictionary `Object` and return an `Onservable` that emits either an array of values in the exact order as the passed array. (`Nó sẽ nhận 1 array or 1 object và nó return 1 Observable, và nó emits 1 array value theo đúng thứ tự như khi ta truyển argument vào`), as `Promise.all()`
 
 > Wait for Observables to complete and then combine last values they emitted; complete immediately if an empty array is passed. (`Chờ cho tất cả Observables complete thì nó sẽ combine tất cả các giá trị mới nhất mà nó emit, complete ngay lập tức nếu như đó là empty array`)
 > forkJoin(...args: any[]): Observable<any>
@@ -2181,6 +2182,7 @@ forkJoin([randomName, randomAddress, randomBank]).subscribe(
 
 > **Note**:
 >
+> -   We doesn't need to `[..., ..]` arguments, but RxJS rescommand use `[...,...]` to uniformity with `forkJoin`
 > -   `combineLatest` emits when each `Observable` emit at least once. (`combineLatest emit when từng Observable emit it nhất 1 lần`)
 > -   Always get emit latest value of children Observable is emitting + nearest value of children `Observable` emited. (`Lun lấy cái giá trị mới nhất của children Observable đang emit + giá trị gần nhất của Observable đã emit`)
 > -   And it return `Observable` by order. (`return các Observable theo đúng thứ tự`)
@@ -2211,6 +2213,8 @@ combineLatest([of(1, 2, 3), interval(1000)]).subscribe(([numb, timeNumb]) => {
 -   **Operator Stacking**
 
 ![Operator Stacking](./assets/images/operators-stacking.png)
+
+> Applying a Pipeable Operator creates a new Observable with some additional logic. (`Applying Pipeable operator tạo 1 Observable với vài logic bổ sung`)
 
 1. **filter**:
 
@@ -2306,3 +2310,47 @@ of(1, 2, 3, 9, 12)
 > **Notion**: It is not working when `Observable` was not `subscribe` and it is not change the notifications in the `Observable stream`.
 
 4. **debounceTime**
+5. **catchError**
+
+-   **catchError**: Catches errors on the observable to be handled by returning a new observable or throwing an error. (`Nó được dùng để lấy cái error và xử lý bằng cách return 1 observable để tránh terminate stream hoặc là throw 1 error`).
+-   We can handle error to an `Observable` or throw an error. If an `Observable`, we can get error by use `subscriber.next()`, else `subscriber.error()`.
+
+> catchError<T, O extends ObservableInput<any>>(selector: (err: any, caught: Observable<T>) => O): OperatorFunction<T, T | ObservedValueOf<O>>
+
+![catchError](./assets/images/catch.png)
+
+```ts
+forkJoin([
+    of(1),
+    of(2),
+    throwError(new Error('401')).pipe(catchError((err) => of(err))),
+]).subscribe(observer)
+// in case, it return an Observable
+// result:
+// [1, 2, Error 401...]
+// it from subscriber.next()
+```
+
+**Return an error**
+
+```ts
+forkJoin([
+    of(1),
+    of(2),
+    throwError(new Error('401')).pipe(
+        catchError((err: any) => {
+            throw new Error(err)
+        })
+    ),
+]).subscribe({
+    next: () => {},
+    error: (err) => {
+        console.log(err)
+    },
+})
+
+// Error 401....
+// it been terminate stream (chấm dứt luồng)
+```
+
+### Flattening Operators
