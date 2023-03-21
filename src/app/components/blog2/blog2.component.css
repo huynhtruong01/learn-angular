@@ -1,0 +1,31 @@
+.blog2-form {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+}
+
+.blog2-form label {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.blog2-form .blog2-field {
+    margin-bottom: 20px;
+}
+
+.blog2-form .blog2-field input {
+    width: 100%;
+    padding: 4px 0 4px 8px;
+}
+
+.blog2-form button {
+    padding: 10px 20px;
+    background-color: #00235b;
+    color: #fff;
+    width: 100%;
+}
+
+.blog2-form button:disabled {
+    background-color: #f6f1f1;
+    cursor: not-allowed;
+}

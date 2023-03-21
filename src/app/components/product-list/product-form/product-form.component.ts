@@ -34,15 +34,15 @@ export class ProductFormComponent implements OnInit {
             this.setValueForm(this.product)
         }
 
-        this.route.params.subscribe((params: Params) => {
-            const newId = params['id']
-            if (newId) {
-                this.id = Number.parseInt(newId)
-                this.product =
-                    this.productService.getProductById(this.id) || ({} as Product)
-                this.setValueForm(this.product)
-            }
-        })
+        // this.route.params.subscribe((params: Params) => {
+        //     const newId = params['id']
+        //     if (newId) {
+        //         this.id = Number.parseInt(newId)
+        //         this.product =
+        //             this.productService.getProductById(this.id) || ({} as Product)
+        //         this.setValueForm(this.product)
+        //     }
+        // })
     }
 
     setValueForm(data: Product): void {

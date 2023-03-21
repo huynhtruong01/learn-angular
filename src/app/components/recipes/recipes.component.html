@@ -2,3 +2,47 @@
     <p>{{time | formatDate}}</p>
     <p>{{text | truncate: 5}}</p>
 </div>
+<div>
+    <ng-template #buttonInfo let-label="label" let-marginRight="marginRight">
+        <button [ngStyle]="{'margin-right': marginRight ? marginRight : 0}">
+            {{label}}
+        </button>
+    </ng-template>
+    <ng-container [ngTemplateOutlet]="buttonInfo"
+        [ngTemplateOutletContext]="{label: 'Add', marginRight: '12px'}"></ng-container>
+    <ng-container [ngTemplateOutlet]="buttonInfo"
+        [ngTemplateOutletContext]="{label: 'Update', marginRight: '12px'}"></ng-container>
+    <ng-container [ngTemplateOutlet]="buttonInfo"
+        [ngTemplateOutletContext]="{label: 'Clone', marginRight: '12px'}"></ng-container>
+</div>
+
+<div [ngStyle]="{'display': 'grid', 'grid-template-columns': 'repeat(2, 1fr)','gap': '20px', 'margin-top': '20px'}">
+    <app-content>
+        <h3 class="header">Header 1</h3>
+        <p class="body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur amet architecto tempore
+            vitae illo expedita perspiciatis autem necessitatibus dolor? Praesentium aut odio saepe commodi magni iure
+            corrupti tempora ea soluta!</p>
+        <small class="footer">Footer 1</small>
+    </app-content>
+    <app-content>
+        <h3 class="header">Header 2</h3>
+        <p class="body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur amet architecto tempore
+            vitae illo expedita perspiciatis autem necessitatibus dolor? Praesentium aut odio saepe commodi magni iure
+            corrupti tempora ea soluta!</p>
+        <small class="footer">Footer 2</small>
+    </app-content>
+    <app-content>
+        <h3 class="header">Header 3</h3>
+        <p class="body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur amet architecto tempore
+            vitae illo expedita perspiciatis autem necessitatibus dolor? Praesentium aut odio saepe commodi magni iure
+            corrupti tempora ea soluta!</p>
+        <small class="footer">Footer 3</small>
+    </app-content>
+    <app-content>
+        <h3 class="header">Header 4</h3>
+        <p class="body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur amet architecto tempore
+            vitae illo expedita perspiciatis autem necessitatibus dolor? Praesentium aut odio saepe commodi magni iure
+            corrupti tempora ea soluta!</p>
+        <small class="footer">Footer 4</small>
+    </app-content>
+</div>

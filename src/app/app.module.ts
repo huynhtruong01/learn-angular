@@ -27,7 +27,11 @@ import { LoginInterceptorService } from './interceptors/login-interceptor.servic
 import { FilterPipe } from './pipes/filter.pipe'
 import { FormatDatePipe } from './pipes/format-date.pipe'
 import { TruncatePipe } from './pipes/truncate.pipe'
-import { UserService } from './services/user.service'
+import { UserService } from './services/user.service';
+import { BlogComponent } from './components/blog/blog.component';
+import { Blog2Component } from './components/blog2/blog2.component';
+import { BlogListComponent } from './components/blog-list/blog-list.component';
+import { ContentComponent } from './components/content/content.component'
 
 @NgModule({
     declarations: [
@@ -51,6 +55,10 @@ import { UserService } from './services/user.service'
         FilterPipe,
         LoginComponent,
         ProductsDetailComponent,
+        BlogComponent,
+        Blog2Component,
+        BlogListComponent,
+        ContentComponent,
     ],
     imports: [
         BrowserModule,

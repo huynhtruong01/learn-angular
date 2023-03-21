@@ -1,70 +1,71 @@
 # CONCEPT ANGULAR
 
-- [CONCEPT ANGULAR](#concept-angular)
-  - [Create new project](#create-new-project)
-  - [App Module](#app-module)
-  - [Data Binding (Ràng buộc dữ liệu)](#data-binding-ràng-buộc-dữ-liệu)
-  - [Create new component](#create-new-component)
-  - [String Interpolation (Nội suy chuoi)](#string-interpolation-nội-suy-chuoi)
-  - [Property Binding](#property-binding)
-  - [Event Binding](#event-binding)
-  - [Two-way binding](#two-way-binding)
-  - [Directives](#directives)
-    - [Component directives](#component-directives)
-    - [Attribute directives](#attribute-directives)
-    - [Structural directives](#structural-directives)
-    - [How to create directives attribute](#how-to-create-directives-attribute)
-  - [Content Projection (ng-content)](#content-projection-ng-content)
-    - [How to use it](#how-to-use-it)
-  - [ng-template, ngTemplateOutlet and ng-container](#ng-template-ngtemplateoutlet-and-ng-container)
-    - [When use ng-template](#when-use-ng-template)
-    - [ngTemplateOutlet](#ngtemplateoutlet)
-  - [Pipes](#pipes)
-  - [Sharing data parent to child and otherwise](#sharing-data-parent-to-child-and-otherwise)
-  - [Lifecycle Hooks](#lifecycle-hooks)
-  - [Services](#services)
-    - [Services](#services-1)
-    - [Why would you Need Services:](#why-would-you-need-services)
-    - [How to Create Services:](#how-to-create-services)
-    - [Hierarchical Injector](#hierarchical-injector)
-  - [Dependency Injection (DI)](#dependency-injection-di)
-  - [Routing](#routing)
-    - [Install routing](#install-routing)
-    - [Pass Parameters](#pass-parameters)
-    - [Fetching router parameter (Get data from URL by snapshot)](#fetching-router-parameter-get-data-from-url-by-snapshot)
-    - [Passing queryParams \& Fragments](#passing-queryparams--fragments)
-    - [Nested Routes](#nested-routes)
-    - [Protecting Route](#protecting-route)
-  - [Pipes](#pipes-1)
-    - [Concept Pipes](#concept-pipes)
-    - [Use Pipes](#use-pipes)
-    - [Custom Pipes](#custom-pipes)
-  - [Observables](#observables)
-    - [Concept Observables \& Observer](#concept-observables--observer)
-    - [How to code Observables with subscribe \& unsubscribe](#how-to-code-observables-with-subscribe--unsubscribe)
-    - [Custom a Observable with: next, error, complete](#custom-a-observable-with-next-error-complete)
-    - [Pipes with operators `rxjs`](#pipes-with-operators-rxjs)
-    - [Subjects](#subjects)
-  - [Making HTTP request](#making-http-request)
-    - [Introduce Interceptor](#introduce-interceptor)
-    - [Change Request Interceptor](#change-request-interceptor)
-    - [Response Interceptors](#response-interceptors)
-    - [Multi Interceptors](#multi-interceptors)
-  - [Lazy loading](#lazy-loading)
-    - [Set up lazy loading](#set-up-lazy-loading)
-    - [Pre Lazy Loading](#pre-lazy-loading)
-  - [Standalone Component](#standalone-component)
-    - [Why we want Standalone Component \& How setup](#why-we-want-standalone-component--how-setup)
-    - [Standalone Component](#standalone-component-1)
-    - [Standalone Directive](#standalone-directive)
-    - [Standalone Root Component](#standalone-root-component)
-    - [Services \& Standalone Component](#services--standalone-component)
-    - [Routing with Standalone Component](#routing-with-standalone-component)
-  - [NgRx](#ngrx)
-  - [RxJS](#rxjs)
-    - [Create Functions](#create-functions)
-    - [Pipeable Operators](#pipeable-operators)
-    - [Flattening Operators](#flattening-operators)
+-   [CONCEPT ANGULAR](#concept-angular)
+    -   [Create new project](#create-new-project)
+    -   [App Module](#app-module)
+    -   [Data Binding (Ràng buộc dữ liệu)](#data-binding-ràng-buộc-dữ-liệu)
+    -   [Create new component](#create-new-component)
+    -   [String Interpolation (Nội suy chuoi)](#string-interpolation-nội-suy-chuoi)
+    -   [Property Binding](#property-binding)
+    -   [Event Binding](#event-binding)
+    -   [Two-way binding](#two-way-binding)
+    -   [Directives](#directives)
+        -   [Component directives](#component-directives)
+        -   [Attribute directives](#attribute-directives)
+        -   [Structural directives](#structural-directives)
+        -   [How to create directives attribute](#how-to-create-directives-attribute)
+    -   [Content Projection (ng-content)](#content-projection-ng-content)
+        -   [How to use it](#how-to-use-it)
+    -   [ng-template, ngTemplateOutlet and ng-container](#ng-template-ngtemplateoutlet-and-ng-container)
+        -   [When use ng-template](#when-use-ng-template)
+        -   [ngTemplateOutlet](#ngtemplateoutlet)
+    -   [Pipes](#pipes)
+    -   [Sharing data parent to child and otherwise](#sharing-data-parent-to-child-and-otherwise)
+    -   [Lifecycle Hooks](#lifecycle-hooks)
+    -   [Services](#services)
+        -   [Services](#services-1)
+        -   [Why would you Need Services:](#why-would-you-need-services)
+        -   [How to Create Services:](#how-to-create-services)
+        -   [Hierarchical Injector](#hierarchical-injector)
+    -   [Dependency Injection (DI)](#dependency-injection-di)
+    -   [Routing](#routing)
+        -   [Install routing](#install-routing)
+        -   [Pass Parameters](#pass-parameters)
+        -   [Fetching router parameter (Get data from URL by snapshot)](#fetching-router-parameter-get-data-from-url-by-snapshot)
+        -   [Passing queryParams \& Fragments](#passing-queryparams--fragments)
+        -   [Nested Routes](#nested-routes)
+        -   [Protecting Route](#protecting-route)
+    -   [Pipes](#pipes-1)
+        -   [Concept Pipes](#concept-pipes)
+        -   [Use Pipes](#use-pipes)
+        -   [Custom Pipes](#custom-pipes)
+    -   [Observables](#observables)
+        -   [Concept Observables \& Observer](#concept-observables--observer)
+        -   [How to code Observables with subscribe \& unsubscribe](#how-to-code-observables-with-subscribe--unsubscribe)
+        -   [Custom a Observable with: next, error, complete](#custom-a-observable-with-next-error-complete)
+        -   [Pipes with operators `rxjs`](#pipes-with-operators-rxjs)
+        -   [Subjects](#subjects)
+    -   [Making HTTP request](#making-http-request)
+        -   [Introduce Interceptor](#introduce-interceptor)
+        -   [Change Request Interceptor](#change-request-interceptor)
+        -   [Response Interceptors](#response-interceptors)
+        -   [Multi Interceptors](#multi-interceptors)
+    -   [Lazy loading](#lazy-loading)
+        -   [Set up lazy loading](#set-up-lazy-loading)
+        -   [Pre Lazy Loading](#pre-lazy-loading)
+    -   [Standalone Component](#standalone-component)
+        -   [Why we want Standalone Component \& How setup](#why-we-want-standalone-component--how-setup)
+        -   [Standalone Component](#standalone-component-1)
+        -   [Standalone Directive](#standalone-directive)
+        -   [Standalone Root Component](#standalone-root-component)
+        -   [Services \& Standalone Component](#services--standalone-component)
+        -   [Routing with Standalone Component](#routing-with-standalone-component)
+    -   [NgRx](#ngrx)
+    -   [RxJS](#rxjs)
+        -   [Create Functions](#create-functions)
+        -   [Pipeable Operators](#pipeable-operators)
+        -   [Flattening Operators](#flattening-operators)
+    -   [The different Between Subject vs BehaviorSubmit](#the-different-between-subject-vs-behaviorsubmit)
 
 ---
 
@@ -2174,7 +2175,7 @@ forkJoin([randomName, randomAddress, randomBank]).subscribe(
 > -   If time A < time B that time B throw Error, time A still emit and complete. (`Time A vẫn có thể emit và complete được`)
 > -   But time A > time that time B throw Error, time A has been cancel implementation, no emit and complete.
 
--   **combineLatest**: like `forkJoin()`, and multiple Observables, it to create an `Observable` whose values are calc from lastest value of each of its input `Observable`. (`Giống với forkJoin, và nó nhận nhiều Observable, dùng để tạo Observable với những giá trị được tính toán từ những giá trị mới nhất của Observable Input`)
+7. **combineLatest**: like `forkJoin()`, and multiple Observables, it to create an `Observable` whose values are calc from lastest value of each of its input `Observable`. (`Giống với forkJoin, và nó nhận nhiều Observable, dùng để tạo Observable với những giá trị được tính toán từ những giá trị mới nhất của Observable Input`)
 
 > combineLatest<O extends ObservableInput<any>, R>(...args: any[]): Observable<R> | Observable<ObservedValueOf<O>[]>
 
@@ -2354,3 +2355,43 @@ forkJoin([
 ```
 
 ### Flattening Operators
+
+---
+
+## The different Between Subject vs BehaviorSubmit
+
+| #                    | **Subject**                                              | **BehaviorSubject**                                                                       |
+| -------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **Values they hold** | - We can't get current value or init value               | - We can get current value or init value                                                  |
+| **Initial value**    | - Don't need initial value                               | - Need initial value as default value                                                     |
+| **Subscribes**       | - Only receive upcoming value (`Chỉ nhận value sắp tới`) | - Receive previous value and also upcoming value (`Nhận value trước và cả value sắp tới`) |
+
+-   We can test it in **ngOnInit**:
+
+```ts
+subscribe = new Subject()
+ngOnInit(){
+    this.subscribe.subscribe({
+            next: () => console.log('a'),
+    })
+    this.subscribe.subscribe({
+        next: () => console.log('b'),
+    })
+    this.subscribe.next(1)
+    this.subscribe.next(2)
+    this.subscribe.subscribe({
+        next: () => console.log('c'),
+    })
+    this.subscribe.next(3)
+
+    // a -> next 1
+    // b -> next 1
+
+    // a -> next 2
+    // b -> next 2
+
+    // a -> next 3
+    // b -> next 3
+    // c -> next 3
+}
+```

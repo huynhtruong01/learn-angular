@@ -27,8 +27,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         of(1, 2, 3, 4)
-            .pipe(concatMap((x) => of(x * 2)))
-            .subscribe((data) => console.log(data))
+            .pipe(concatMap((x) => of([x, x * 2, x * 4])))
+            .subscribe({
+                next: (data) => {
+                    console.log(data)
+                },
+                error: (err) => {
+                    console.log(err)
+                },
+            })
     }
 
     ngOnDestroy(): void {

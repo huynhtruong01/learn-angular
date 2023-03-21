@@ -1,0 +1,13 @@
+<form [formGroup]="blogForm" (ngSubmit)="handleSubmit($event)" class="blog2-form">
+   <div class="blog2-field">
+      <label for="name">Title</label>
+      <input type="text" id="name" placeholder="Enter name" formControlName="title" />
+      <small *ngIf="title?.hasError('required') && title?.touched">Please enter name</small>
+   </div>
+   <div class="blog2-field">
+      <label for="description">Description</label>
+      <input type="text" id="description" placeholder="Enter name" formControlName="description" />
+      <small *ngIf="description?.hasError('required') && description?.touched">Please enter description</small>
+   </div>
+   <button type="submit" [disabled]="blogForm.invalid">Add blog</button>
+</form>

@@ -1,0 +1,7 @@
+<div *ngFor="let blog of blogList">
+   <div>
+      <h3>{{blog.title}}</h3>
+      <p>{{blog.description}}</p>
+   </div>
+</div>
+<ng-template [ngIf]="blogList.length === 0">Blog empty</ng-template>

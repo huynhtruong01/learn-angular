@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { Observable, Subscription } from 'rxjs'
-import { map } from 'rxjs/operators'
+import { from, Observable, Subject, Subscription } from 'rxjs'
+import { filter, map } from 'rxjs/operators'
+import { of } from 'rxjs'
 import { CommonService } from 'src/app/services/common.service'
 
 @Component({
@@ -16,6 +17,7 @@ export class RecipesComponent implements OnInit, OnDestroy {
     time: Date = new Date()
     text: string =
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+    subscriptions: Subscription[] = []
 
     constructor(private commonService: CommonService) {}
 
@@ -52,6 +54,14 @@ export class RecipesComponent implements OnInit, OnDestroy {
                 console.log('Activated successfully')
             },
         })
+
+        const numbers = from([1, 2, 3])
+
+        this.subscriptions.push(
+            numbers.pipe(filter((x) => x === 2)).subscribe({
+                next: (n) => console.log(n),
+            })
+        )
     }
 
     handleActivated(): void {
@@ -63,5 +73,8 @@ export class RecipesComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.firstSubscription.unsubscribe()
         this.activatedSubscription.unsubscribe()
+        this.subscriptions.forEach((subscription: Subscription) => {
+            subscription.unsubscribe()
+        })
     }
 }

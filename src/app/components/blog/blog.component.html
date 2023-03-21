@@ -1,0 +1,6 @@
+<div *ngFor="let blog of blogs; index as idx">
+   <ng-template [ngIf]="idx === 2">
+      <h3>{{blog.title}}</h3>
+      <p>{{blog.body}}</p>
+   </ng-template>
+</div>
